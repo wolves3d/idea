@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{e250be80-0073-4f13-88b5-0f2b6f8d9853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\API">
+      <UniqueIdentifier>{08f1aa64-ec48-4a36-8089-ab67be40f2f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Math">
+      <UniqueIdentifier>{9ba35e3c-201d-497e-a0da-3a2203d777b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Templates">
+      <UniqueIdentifier>{ce7b723c-4298-4cc4-b5f0-52322aa1de5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{68b9c813-1432-4b81-b41d-e96df0833aa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Extensions">
+      <UniqueIdentifier>{bb13e688-fdbd-4102-85f8-cf7a96178aae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{6385cad2-760e-4d0d-baf3-ee0c94c87f63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Texture">
+      <UniqueIdentifier>{16d02798-00d1-4c98-95bc-0b357164862d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{20f057b6-1842-474a-b786-803d62f05742}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shaders">
+      <UniqueIdentifier>{1bef1635-da25-4c56-a8be-c6167e9d2eff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utils">
+      <UniqueIdentifier>{e68103c5-3531-4127-b941-63559f61087f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderTarget">
+      <UniqueIdentifier>{a4a578c8-b804-4560-8c49-a338b4c13cc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Renderer">
+      <UniqueIdentifier>{e606801f-2f86-4e33-8fa7-f82824f07b5f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LibraryMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Core.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\States.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\VertexDecl.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Extensions\Extensions.cpp">
+      <Filter>Source Files\Core\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh\IndexBuffer.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh\VertexBuffer.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Texture.cpp">
+      <Filter>Source Files\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\BaseShader.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Shaders\ShaderParsing.cpp">
+      <Filter>Source Files\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\Lines.cpp">
+      <Filter>Source Files\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget\RenderTarget.cpp">
+      <Filter>Source Files\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\Renderer\BaseVertexDecl.cpp">
+      <Filter>Source Files\_Shared\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\Math\3dmath.cpp">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer_GL.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IRenderer.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\ISystem.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Container.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\SafePointer.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Stack.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\String.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Extensions\Extensions.h">
+      <Filter>Source Files\Core\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Extensions\glext.h">
+      <Filter>Source Files\Core\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\BaseShader.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\Shader.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\ShaderManager.h">
+      <Filter>Source Files\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Renderer\BaseVertexDecl.h">
+      <Filter>Source Files\_Shared\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\3dmath.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\BBox.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\matrix.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\plane.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\quat.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec2.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec3.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec4.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
