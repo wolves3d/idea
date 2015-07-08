@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{eb792fb2-cc97-4a3e-9ff6-3ee6d850243f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\API">
+      <UniqueIdentifier>{2dce1bdb-68df-487f-9bcb-725e1eea03dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Math">
+      <UniqueIdentifier>{6cf3f439-51d2-4469-bbcc-513ff555bb07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Templates">
+      <UniqueIdentifier>{9b5b0aa5-399c-465d-9ed7-b443d8f38e2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{6c984b87-ac0a-47d3-8d5c-87bbf590d57a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\StackWalker">
+      <UniqueIdentifier>{f3f57a48-404f-41ee-91ae-79880a2860b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Librarys">
+      <UniqueIdentifier>{c296cb5a-65e9-466c-ae7f-7f7535e1b95e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ClassDesc.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Counter.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Debug.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Memory.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\System.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TestSuite.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\VarStorage.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\StackWalker\StackWalker.cpp">
+      <Filter>Source Files\Core\StackWalker</Filter>
+    </ClCompile>
+    <ClCompile Include="Librarys\Librarys.cpp">
+      <Filter>Source Files\Librarys</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Base.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Memory.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IInput.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IRenderer.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\ISystem.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IVfs.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Math\3dmath.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Math\matrix.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Math\quat.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Math\vec2.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Math\vec3.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Container.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\HashTable.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\SafePointer.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Stack.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\String.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\System.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\StackWalker\StackWalker.h">
+      <Filter>Source Files\Core\StackWalker</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
