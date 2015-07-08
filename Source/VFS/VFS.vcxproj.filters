@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{e8aa4f41-fd42-4c27-9265-827c64ae3652}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\API">
+      <UniqueIdentifier>{8ba1b1b6-c86f-4cb5-8869-d85716b9b793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Templates">
+      <UniqueIdentifier>{ac353d29-3c02-4815-a1c1-8861a112b6ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{ff7e0b0e-0c8e-47e7-830f-94bfc0e6b1b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Sound">
+      <UniqueIdentifier>{8d51efd7-2691-45f4-8c31-08a9d0c87858}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\tinyXML">
+      <UniqueIdentifier>{619fb0cb-2f8c-422b-9153-972e717d9fd9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LibraryMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\File.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Vfs.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Sound\SoundMgr.cpp">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Sound\Voice.cpp">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Sound\WaveSample.cpp">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXML\tinystr.cpp">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXML\tinyxml.cpp">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXML\tinyxmlerror.cpp">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXML\tinyxmlparser.cpp">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyXML\XMLWrapper.cpp">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IInput.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\API\ISoundMgr.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\ISystem.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IVfs.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IXMLWrapper.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Vector.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Input.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Vfs.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Sound\SoundMgr.h">
+      <Filter>Source Files\Core\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyXML\tinystr.h">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyXML\tinyxml.h">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyXML\XMLWrapper.h">
+      <Filter>Source Files\tinyXML</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
