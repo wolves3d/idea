@@ -8,3 +8,5 @@
 /Source/System/*.user
 /Source/Tools/MayaExport/*.user
 /Source/VFS/*.user
+/Bin/Debug
+/Bin/Modules
