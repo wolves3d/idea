@@ -1,0 +1,22 @@
+global proc wwDoExport()
+{
+
+}
+
+//////////////////////////////////////////////////////////
+
+if ( `window -ex wwWin` )
+	deleteUI wwWin;
+	
+/////////////////////////////////////////////////////
+
+global int $width = 550;
+global int $height = 650;
+
+window -wh $width $height -title ( "ww" ) -s 1 wwWin;
+
+formLayout -e -w $width -h $height; // $cacheSegmentForm;
+
+// button -l "Export" -c "wwDoExport()" ExportButton;
+
+showWindow;

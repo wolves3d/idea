@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{51165465-9721-44f0-b643-63598548456f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Mesh">
+      <UniqueIdentifier>{bce6c4ca-cd89-4a17-b42c-d9217545e7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Joints">
+      <UniqueIdentifier>{fbbab185-a415-4dc8-931a-6049e71251d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Scene">
+      <UniqueIdentifier>{335be3c0-180c-4c8c-8d42-e800a0ab8d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Skin">
+      <UniqueIdentifier>{b26deccb-00fe-46a6-a466-1bd0b82dad67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{5a572018-2519-47ca-b285-4d7b60093726}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\API">
+      <UniqueIdentifier>{38d57a9a-383a-4b51-870d-7e37970b17f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Math">
+      <UniqueIdentifier>{f4848431-1da1-4f44-8d68-aaa7fba39fe8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\MayaExport.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Mesh\Mesh.h">
+      <Filter>Source Files\Core\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Joints\Joints.h">
+      <Filter>Source Files\Core\Joints</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Skin\Skin.h">
+      <Filter>Source Files\Core\Skin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\API\IEngine.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\PluginMain.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Mesh\Mesh.cpp">
+      <Filter>Source Files\Core\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Mesh\MeshVertices.cpp">
+      <Filter>Source Files\Core\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Mesh\Surface.cpp">
+      <Filter>Source Files\Core\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Joints\Anim.cpp">
+      <Filter>Source Files\Core\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Joints\Joints.cpp">
+      <Filter>Source Files\Core\Joints</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\MayaObject.cpp">
+      <Filter>Source Files\Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Scene\Scene.cpp">
+      <Filter>Source Files\Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Skin\Skin.cpp">
+      <Filter>Source Files\Core\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Skin\SkinVertices.cpp">
+      <Filter>Source Files\Core\Skin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\Math\3dmath.cpp">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
