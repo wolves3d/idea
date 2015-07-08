@@ -1,0 +1,20 @@
+
+class CRegClass
+{
+	public:
+	
+		Load( ILexer * );
+		Save( ILexer * );
+}
+
+struct TInfo
+{
+	int		nIntField;
+	float	fField;
+	
+	static Declare( CRegClass * pNewClass )
+	{
+		DECLARE_CLASS( "TInfo" ); // pNewClass->SetName( "TInfo", pNewClass->CreateNewInstance );
+		DECLARE_FIELD( int, "integer", nIntField ); // pNewClass->AddField( #int, "integer", &pPtr->nIntField, );
+	}
+}

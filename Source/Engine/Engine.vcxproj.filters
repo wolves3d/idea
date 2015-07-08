@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{cc751dae-0d57-4f20-a29d-bbbe9571d8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{33aa23c8-52b0-4ace-a1a2-2c4481544da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{4fcd3ebb-693a-436e-8120-66121ae8cea0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\API">
+      <UniqueIdentifier>{0988e1b9-560e-454f-af6b-569a4f58a234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Templates">
+      <UniqueIdentifier>{b19f6218-afe5-4740-a301-fb20f3c3ebd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Engine">
+      <UniqueIdentifier>{c368ac57-0fa0-433d-860e-6036690e53c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Math">
+      <UniqueIdentifier>{49f33c2f-bf95-4f71-a4de-ea9ea26d37fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Material">
+      <UniqueIdentifier>{41b26329-db5b-4468-bfe5-9a8e2afe8106}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scene">
+      <UniqueIdentifier>{938d1e3b-c5cf-454d-a09e-e0f10d5f4bd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\EasyWin">
+      <UniqueIdentifier>{ece18468-22bf-434c-ba31-3acd0e020c02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editors">
+      <UniqueIdentifier>{79d129b7-024d-494f-81a6-3f120299c486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editors\LandscapeEditor">
+      <UniqueIdentifier>{66b83f6d-b858-4387-bf66-822c414dc47d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editors\ParticleEditor">
+      <UniqueIdentifier>{1bf23e0c-1933-4544-9953-ce4a958d707e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editors\MaterialEditor">
+      <UniqueIdentifier>{23d8ac9c-71fe-47ab-9da8-e6f1735b5b5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editors\EntityEditor">
+      <UniqueIdentifier>{2aaa557e-aa11-4982-adb0-ea7d5713c2c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shapes">
+      <UniqueIdentifier>{a7448eda-afec-4ac4-9fd3-683c1b8347c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ResurceManager">
+      <UniqueIdentifier>{3809737f-2bdf-4836-83d6-459a9c611834}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ResurceManager\Loaders">
+      <UniqueIdentifier>{86087b60-e2ff-48ed-8ba4-ba8e29a1933a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Profiler">
+      <UniqueIdentifier>{3573c8fd-f901-4209-bc19-df2a0b9a0db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World">
+      <UniqueIdentifier>{a96e0276-7175-4e27-8b17-1804fcf7a3a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entity">
+      <UniqueIdentifier>{4adcaf0d-4430-4da6-aba1-62246aad2eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Entity\Abilities">
+      <UniqueIdentifier>{cdd0cc9c-bfc0-4281-999a-d259a1bee162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\World\Landscape">
+      <UniqueIdentifier>{b2819d03-eba0-4cd5-89be-2e844afb2f38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Model">
+      <UniqueIdentifier>{42c1d2a8-addd-4124-8017-d0cd61ff9cdc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LibraryMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\BaseControl.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Button.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Console.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Edit.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Font.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\ListView.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Sprite.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Text.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI_Debug.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\UIManager.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Window.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Commands.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Engine.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\Material.cpp">
+      <Filter>Source Files\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Camera.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Object.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ParticleSystem.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Source Files\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="EasyWin\EasyWin.cpp">
+      <Filter>Source Files\EasyWin</Filter>
+    </ClCompile>
+    <ClCompile Include="Editors\MaterialEditor\MaterialEditor.cpp">
+      <Filter>Source Files\Editors\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editors\EntityEditor\EntityEditor.cpp">
+      <Filter>Source Files\Editors\EntityEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Shapes\Mesh.cpp">
+      <Filter>Source Files\Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\ResManagerTest.cpp">
+      <Filter>Source Files\ResurceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\ResourceManager.cpp">
+      <Filter>Source Files\ResurceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\Loaders\TargaLoader.cpp">
+      <Filter>Source Files\ResurceManager\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Profiler\Profiler.cpp">
+      <Filter>Source Files\Profiler</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Entity\Entity.cpp">
+      <Filter>Source Files\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Entity\EntityManager.cpp">
+      <Filter>Source Files\World\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Entity\Abilities\ModelAbility.cpp">
+      <Filter>Source Files\World\Entity\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Entity\Abilities\ModelLoader.cpp">
+      <Filter>Source Files\World\Entity\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Landscape\Landscape.cpp">
+      <Filter>Source Files\World\Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Landscape\LandTile.cpp">
+      <Filter>Source Files\World\Landscape</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Animation.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager\Loaders\ShaderConfig.cpp">
+      <Filter>Source Files\ResurceManager\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\Math\3dmath.cpp">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\UnitTest.cpp">
+      <Filter>Source Files\_Shared</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\Console.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIManager.h">
+      <Filter>Source Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Commands.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Engine.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IEngine.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IInput.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IRenderer.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\API\IResManager.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\ISystem.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Api\IVfs.h">
+      <Filter>Source Files\_Shared\API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Container.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\SafePointer.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\Stack.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Templates\String.h">
+      <Filter>Source Files\_Shared\Templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\BaseControl.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\Button.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\Console.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\Edit.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\ListView.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\StaticText.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\UI.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\_Shared\Engine\Window.h">
+      <Filter>Source Files\_Shared\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\Material.h">
+      <Filter>Source Files\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ParticleSystem.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Source Files\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="EasyWin\EasyWin.h">
+      <Filter>Source Files\EasyWin</Filter>
+    </ClInclude>
+    <ClInclude Include="Editors\MaterialEditor\MaterialEditor.h">
+      <Filter>Source Files\Editors\MaterialEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editors\MaterialEditor\MaterialEditorForm.h">
+      <Filter>Source Files\Editors\MaterialEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Shapes\Shape.h">
+      <Filter>Source Files\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager\ResourceManager.h">
+      <Filter>Source Files\ResurceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Profiler\Profiler.h">
+      <Filter>Source Files\Profiler</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Entity\Entity.h">
+      <Filter>Source Files\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Entity\EntityManager.h">
+      <Filter>Source Files\World\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Entity\Abilities\ModelAbility.h">
+      <Filter>Source Files\World\Entity\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Landscape\Landscape.h">
+      <Filter>Source Files\World\Landscape</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\3dmath.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\BBox.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\matrix.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\plane.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\quat.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec2.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec3.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec4.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Base.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Memory.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\UnitTest.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Utils.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
