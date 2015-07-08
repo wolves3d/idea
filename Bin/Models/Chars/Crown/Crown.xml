@@ -1,0 +1,8 @@
+<Model>
+   <Animations>
+      <anim File="Models/Chars/Crown/Anims/fun.anim" Name="test_anim" Flags="empty"/>
+   </Animations>
+   <Mesh File="Models/Chars/Crown/Crown.mesh">
+      <Material Name="lambert1" Shader="Skin" DiffuseMap="Models/Chars/Crown/crown.tga"/>
+   </Mesh>
+</Model>

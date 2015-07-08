@@ -1,0 +1,44 @@
+!!ARBvp1.0
+OPTION NV_vertex_program3;
+# cgc version 2.0.0018, build date Dec  5 2007
+# command line args: 
+#vendor NVIDIA Corporation
+#version 2.0.1.18
+#profile vp40
+#program main
+#semantic vOffset
+#semantic vColorMod
+#semantic gl_ModelViewProjectionMatrix : state.matrix.mvp.transpose
+#var float2 vPos : $vin.ATTR0 : ATTR0 : -1 : 1
+#var float2 vTex0 : $vin.ATTR1 : ATTR1 : -1 : 1
+#var float4 vOffset :  : c[0] : -1 : 1
+#var float4 vColorMod :  : c[1] : -1 : 1
+#var float4 gl_Position : $vout.POSITION : HPOS : -1 : 1
+#var float4 gl_FrontColor : $vout.COLOR0 : COL0 : -1 : 1
+#var float4 gl_TexCoord[0] : $vout.TEX0 : TEX0 : -1 : 1
+#var float4 gl_TexCoord[1] :  :  : -1 : 0
+#var float4 gl_TexCoord[2] :  :  : -1 : 0
+#var float4 gl_TexCoord[3] :  :  : -1 : 0
+#var float4 gl_TexCoord[4] :  :  : -1 : 0
+#var float4 gl_TexCoord[5] :  :  : -1 : 0
+#var float4 gl_TexCoord[6] :  :  : -1 : 0
+#var float4 gl_TexCoord[7] :  :  : -1 : 0
+#var float4x4 gl_ModelViewProjectionMatrix : state.matrix.mvp.transpose : c[2], 4 : -1 : 1
+#const c[6] = 1 0
+PARAM c[7] = { program.local[0..1],
+		state.matrix.mvp.transpose,
+		{ 1, 0 } };
+TEMP R0;
+TEMP R1;
+TEMP RC, HC;
+BB1:
+ADD   R0.xy, c[0].yxzw, vertex.attrib[0].yxzw;
+MUL   R1, R0.x, c[3];
+MAD   R0, R0.y, c[2], R1;
+ADD   R0, c[5], R0;
+ADD   result.position, c[6].y, R0;
+MOV   result.color, c[1];
+MOV   result.texcoord[0].xy, vertex.attrib[1];
+MOV   result.texcoord[0].zw, c[6].x;
+END
+# 8 instructions, 2 R-regs

@@ -1,0 +1,28 @@
+!!ARBfp1.0
+OPTION NV_fragment_program2;
+# cgc version 2.0.0018, build date Dec  5 2007
+# command line args: 
+#vendor NVIDIA Corporation
+#version 2.0.1.18
+#profile fp40
+#program main
+#semantic DiffuseMap
+#var sampler2D DiffuseMap :  : texunit 0 : -1 : 1
+#var float4 gl_Color : $vin.COLOR : COL0 : -1 : 1
+#var float4 gl_FragColor : $vout.COLOR : COL : -1 : 1
+#var float4 gl_TexCoord[0] : $vin.TEX0 : TEX0 : -1 : 1
+#var float4 gl_TexCoord[1] :  :  : -1 : 0
+#var float4 gl_TexCoord[2] :  :  : -1 : 0
+#var float4 gl_TexCoord[3] :  :  : -1 : 0
+#var float4 gl_TexCoord[4] :  :  : -1 : 0
+#var float4 gl_TexCoord[5] :  :  : -1 : 0
+#var float4 gl_TexCoord[6] :  :  : -1 : 0
+#var float4 gl_TexCoord[7] :  :  : -1 : 0
+TEMP R0;
+TEMP RC;
+TEMP HC;
+OUTPUT oCol = result.color;
+TEX   R0, fragment.texcoord[0], texture[0], 2D;
+MULR  oCol, fragment.color.primary, R0;
+END
+# 2 instructions, 1 R-regs, 0 H-regs

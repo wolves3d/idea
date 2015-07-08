@@ -1,0 +1,28 @@
+
+Texture2D texDiffuse;
+
+
+sampler mySampler //= sampler_state
+{
+//    MipFilter = LINEAR;
+//    MinFilter = LINEAR;
+//    MagFilter = LINEAR;
+};
+
+
+struct VS_OUTPUT
+{
+    float4 Position	: SV_Position;	// vertex position 
+    float2 vUV		: TEXCOORD0;
+	float4 vColor	: COLOR;
+};
+
+
+//--------------------------------------------------------------------------------------
+// Pixel Shader
+//--------------------------------------------------------------------------------------
+float4 main( VS_OUTPUT In )  : SV_Target
+{
+	return texDiffuse.Sample( mySampler, In.vUV ).zyxw * In.vColor;
+//	return 1.f;
+}

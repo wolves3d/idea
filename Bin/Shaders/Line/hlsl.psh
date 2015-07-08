@@ -1,0 +1,25 @@
+
+
+
+sampler mySampler //= sampler_state
+{
+//    MipFilter = LINEAR;
+//    MinFilter = LINEAR;
+//    MagFilter = LINEAR;
+};
+
+
+struct VS_OUTPUT
+{
+    float4 Position	: SV_Position;	// vertex position 
+    float4 vColor	: TEXCOORD0;
+};
+
+
+//--------------------------------------------------------------------------------------
+// Pixel Shader
+//--------------------------------------------------------------------------------------
+float4 main( VS_OUTPUT In )  : SV_Target
+{
+	return In.vColor;
+}

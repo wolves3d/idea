@@ -1,0 +1,39 @@
+<Shaders>
+   <UI ProgramPath="Shaders/UI">
+      <VertexFormat>
+         <vPos Type="vec2" D3D_Semantic="POSITION"/>
+         <vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
+      </VertexFormat>
+      <Constants mMVP="mat4" vOffset="vec4" vColorMod="vec4"/>
+      <Maps Diffuse="tex2d"/>
+   </UI>
+   <Skin ProgramPath="Shaders/Skin">
+      <VertexFormat>
+         <vPos Type="vec3" D3D_Semantic="POSITION"/>
+         <vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
+         <vSkin Type="vec4" D3D_Semantic=""/>
+      </VertexFormat>
+      <Constants pBoneMatrices="mat4 [20]" mMVP="mat4"/>
+      <Maps Diffuse="tex2d"/>
+      <Options>
+         <Skin key="OPTION_SKIN">
+            <VertexFormat vSkin="vec4"/>
+         </Skin>
+      </Options>
+   </Skin>
+   <Land ProgramPath="Shaders/Land">
+      <VertexFormat>
+         <vPos Type="vec3" D3D_Semantic="POSITION"/>
+         <vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
+      </VertexFormat>
+      <Constants mMVP="mat4"/>
+      <Maps Diffuse="tex2d"/>
+   </Land>
+   <Line ProgramPath="Shaders/Line">
+      <VertexFormat>
+         <vPos Type="vec3" D3D_Semantic="POSITION"/>
+         <vColor Type="vec4" D3D_Semantic="COLOR"/>
+      </VertexFormat>
+      <Constants mMVP="mat4"/>
+   </Line>
+</Shaders>
