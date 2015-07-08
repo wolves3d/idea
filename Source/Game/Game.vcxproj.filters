@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{23aa91ce-964e-4b2f-9cd0-faa8557cdacb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor">
+      <UniqueIdentifier>{ead6c115-d8b5-4cd6-a684-ae60f452eff0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Locations">
+      <UniqueIdentifier>{16cab4d6-41e5-4f3e-ab43-3f617933edd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Source Files\_Shared">
+      <UniqueIdentifier>{78d50f6f-6e7f-4482-8f83-387789a634f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\_Shared\Math">
+      <UniqueIdentifier>{8ee26e72-04bb-41ed-9ba4-f58dab726bf5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Commands.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Desktop.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Game.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\Editor.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Locations\01_Room.cpp">
+      <Filter>Source Files\Locations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\UnitTest.cpp">
+      <Filter>Source Files\_Shared</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\_Shared\Math\3dmath.cpp">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\ProjectedGrid.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Desktop.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Game.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\Editor.h">
+      <Filter>Source Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Locations\BaseLocation.h">
+      <Filter>Source Files\Locations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\UnitTest.h">
+      <Filter>Source Files\_Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\3dmath.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\BBox.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\matrix.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\plane.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\quat.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec2.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec3.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\_Shared\Math\vec4.h">
+      <Filter>Source Files\_Shared\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ProjectedGrid.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
