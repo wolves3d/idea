@@ -1,0 +1,10 @@
+/Source/Engine/*.user
+/Source/*.sdf
+/Source/*.suo
+/Source/Game/*.user
+/Source/RendererGL/*.user
+/Source/ipch
+/Source/RendererD3D/*.user
+/Source/System/*.user
+/Source/Tools/MayaExport/*.user
+/Source/VFS/*.user
