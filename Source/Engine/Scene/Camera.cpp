@@ -32,22 +32,21 @@ class CCamera : public ICamera
 		void SetParams(float fov, float width, float height, float nearClip, float farClip)
 		{
 			m_FOV = fov;
-			m_viewWidth = width;
-			m_viewHeight = height;
+			m_viewport.Set(width, height);
 			m_near = nearClip;
 			m_far = farClip;
 
 			m_vViewport.x = 0;
 			m_vViewport.y = 0;
-			m_vViewport.z = m_viewWidth;
-			m_vViewport.w = m_viewHeight;
+			m_vViewport.z = m_viewport.x;
+			m_vViewport.w = m_viewport.y;
 
 			UpdateProjection();
 		}
 
 		void UpdateProjection()
 		{
-			const float aspectRatio = (m_viewWidth / m_viewHeight);
+			const float aspectRatio = (m_viewport.x / m_viewport.y);
 
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -189,9 +188,9 @@ class CCamera : public ICamera
 			vec3 pRayTL[2];
 
 			Unproject(pRayBL, ivec2(0, 0));
-			Unproject(pRayBR, ivec2(m_viewWidth, 0));
-			Unproject(pRayTR, ivec2(m_viewWidth, m_viewHeight));
-			Unproject(pRayTL, ivec2(0, m_viewHeight));
+			Unproject(pRayBR, ivec2(m_viewport.x, 0));
+			Unproject(pRayTR, ivec2(m_viewport.x, m_viewport.y));
+			Unproject(pRayTL, ivec2(0, m_viewport.y));
 
 			g_pEngine->PushLine(pRayBL[0], pRayBL[1]);
 			g_pEngine->PushLine(pRayBR[0], pRayBR[1]);
@@ -211,11 +210,17 @@ class CCamera : public ICamera
 			g_pEngine->PushLine(pRayTL[1], pRayBL[1]);
 		}
 
+		const vec2 & GetViewport()
+		{
+			return m_viewport;
+		}
+
 	private :
 
 		bool m_isMatrixDirty;
 
-		float m_FOV, m_near, m_far, m_viewWidth, m_viewHeight;
+		float m_FOV, m_near, m_far;
+		vec2 m_viewport;
 
 		//mat4 m_mWorld;
 		vec3 m_vPos;

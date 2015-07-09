@@ -17,6 +17,8 @@ class CProjectedGrid
 	private:
 
 		void Update();
+		void Project();
+		float HeightFunc(float x, float z);
 
 		uint m_gridWidth;
 		uint m_gridHeight;
@@ -34,6 +36,10 @@ class CProjectedGrid
 		};
 
 		ICamera * m_pProjector;
+
+		mat4 m_rangeMatrix;
+		mat4 m_invViewProj;
+		mat4 m_projector;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

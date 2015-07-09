@@ -200,6 +200,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 	IEasyWin * pWin = g_pEngine->GetWindow();
 	g_pGame->m_pCamera = g_pEngine->CreateCamera();
 	g_pEngine->SetCamera( g_pGame->m_pCamera );
+	g_pGame->m_pCamera->SetPos(vec3(0, 15, 31));
+	//g_pGame->m_pCamera->LookAt(vec3::vNull, vec3::vUp);
 
 	dword dwNumFPS = 0;
 	dword dwShowTime = GetTickCount() + 1000;
