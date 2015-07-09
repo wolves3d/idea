@@ -10,3 +10,5 @@
 /Source/VFS/*.user
 /Bin/Debug
 /Bin/Modules
+/Intermediate
+/Source/*.opensdf

@@ -29,6 +29,8 @@
 #include "_Shared/Templates/Vector.h"
 #include "_Shared/Templates/HashTable.h"
 
+#include <vector>
+
 #include "_Shared/Math/3dmath.h"
 
 //------------------------------------------------------------------------------

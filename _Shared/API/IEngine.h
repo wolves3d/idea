@@ -151,6 +151,7 @@ struct ICamera
 	virtual void LookAt(const vec3 & targetPoint, const vec3 & up) = 0;
 
 	virtual void SetParams(float fov, float width, float height, float nearClip, float farClip) = 0;
+	virtual const vec2 & GetViewport() = 0;
 
 	virtual const mat4 & GetViewMatrix() const = 0;
 	virtual const mat4 & GetProjMatrix() const = 0;
@@ -733,6 +734,7 @@ struct IEngine : public IBaseIntf
 	virtual IParticleSystem * CreateParticleSys() = 0;
 
 	virtual void PushBBox(const bbox & box, dword dwColor) = 0;
+	virtual void PushLine( const vec3 & vStart, const vec3 & vEnd, dword dwColor = 0xFFFFFFFF) = 0;
 
 	virtual IEasyWin *		GetWindow	()										= 0;
 
