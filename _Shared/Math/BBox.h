@@ -11,6 +11,23 @@ class bbox
 
 		vec3 vMin, vMax;
 
+		bbox()
+		{
+		}
+
+		bbox(const vec3 centerPoint, float edgeSize)
+		{
+			vMin.Set(
+				centerPoint.x - edgeSize,
+				centerPoint.y - edgeSize,
+				centerPoint.z - edgeSize);
+
+			vMax.Set(
+				centerPoint.x + edgeSize,
+				centerPoint.y + edgeSize,
+				centerPoint.z + edgeSize);
+		}
+
 		inline void Translate( const mat4 & matrix )
 		{
 			vMin.Multiply( matrix );
