@@ -77,19 +77,19 @@ class CCamera : public ICamera
 
 		void LookAt(const vec3 & targetPoint, const vec3 & up)
 		{
-			vec3 viewDirection = (m_vPos - targetPoint).Normalize();	// z-axis (back-view, openGL specific?)
+			vec3 viewDirection = (targetPoint - m_vPos).Normalize();	// z-axis
 			vec3 side = Cross(viewDirection, up).Normalize();			// x-axis
-			vec3 newUp = Cross(viewDirection, side);					// y-axis
+			vec3 newUp = Cross(side, viewDirection).Normalize();		// y-axis
 
 			g_pEngine->PushLine(m_vPos, targetPoint, 0xFFFF0000);
-			g_pEngine->PushLine(m_vPos, m_vPos - viewDirection, 0xFF0000FF);
+			g_pEngine->PushLine(m_vPos, m_vPos + viewDirection, 0xFF0000FF);
 			g_pEngine->PushLine(m_vPos, m_vPos + side, 0xFFFF0000);
 			g_pEngine->PushLine(m_vPos, m_vPos + newUp, 0xFF00FF00);
 			
 			mat4 m(mat4::mIdentity);
 			m.vRow0.Set(side, 0);
 			m.vRow1.Set(newUp, 0);
-			m.vRow2.Set(viewDirection, 0);
+			m.vRow2.Set(-viewDirection, 0); // (back-view, openGL specific?)
 
 			m_qOrient.FromRotationMatrix(m);
 		}
@@ -175,7 +175,7 @@ class CCamera : public ICamera
 			return true;
 		}
 
-		void RenderFrustum()
+		void RenderFrustum(dword color = 0xFFFFFFFF)
 		{
 			Update(); // hack
 
@@ -192,22 +192,22 @@ class CCamera : public ICamera
 			Unproject(pRayTR, ivec2(m_viewport.x, m_viewport.y));
 			Unproject(pRayTL, ivec2(0, m_viewport.y));
 
-			g_pEngine->PushLine(pRayBL[0], pRayBL[1]);
-			g_pEngine->PushLine(pRayBR[0], pRayBR[1]);
-			g_pEngine->PushLine(pRayTR[0], pRayTR[1]);
-			g_pEngine->PushLine(pRayTL[0], pRayTL[1]);
+			g_pEngine->PushLine(pRayBL[0], pRayBL[1], color);
+			g_pEngine->PushLine(pRayBR[0], pRayBR[1], color);
+			g_pEngine->PushLine(pRayTR[0], pRayTR[1], color);
+			g_pEngine->PushLine(pRayTL[0], pRayTL[1], color);
 
 			// near plane
-			g_pEngine->PushLine(pRayBL[0], pRayBR[0]);
-			g_pEngine->PushLine(pRayBR[0], pRayTR[0]);
-			g_pEngine->PushLine(pRayTR[0], pRayTL[0]);
-			g_pEngine->PushLine(pRayTL[0], pRayBL[0]);
+			g_pEngine->PushLine(pRayBL[0], pRayBR[0], color);
+			g_pEngine->PushLine(pRayBR[0], pRayTR[0], color);
+			g_pEngine->PushLine(pRayTR[0], pRayTL[0], color);
+			g_pEngine->PushLine(pRayTL[0], pRayBL[0], color);
 
 			// far plane
-			g_pEngine->PushLine(pRayBL[1], pRayBR[1]);
-			g_pEngine->PushLine(pRayBR[1], pRayTR[1]);
-			g_pEngine->PushLine(pRayTR[1], pRayTL[1]);
-			g_pEngine->PushLine(pRayTL[1], pRayBL[1]);
+			g_pEngine->PushLine(pRayBL[1], pRayBR[1], color);
+			g_pEngine->PushLine(pRayBR[1], pRayTR[1], color);
+			g_pEngine->PushLine(pRayTR[1], pRayTL[1], color);
+			g_pEngine->PushLine(pRayTL[1], pRayBL[1], color);
 		}
 
 		const vec2 & GetViewport()
