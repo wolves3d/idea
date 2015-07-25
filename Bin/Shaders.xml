@@ -29,6 +29,17 @@
       <Constants mMVP="mat4"/>
       <Maps Diffuse="tex2d"/>
    </Land>
+   <Water ProgramPath="Shaders/Water">
+      <VertexFormat>
+         <vPos Type="vec3" D3D_Semantic="POSITION"/>
+         <vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
+		 <vTangent Type="vec3" D3D_Semantic="POSITION"/>
+		 <vBitangent Type="vec3" D3D_Semantic="POSITION"/>
+		 <vNormal Type="vec3" D3D_Semantic="POSITION"/>
+      </VertexFormat>
+      <Constants mMVP="mat4" modelView="mat4" vLightPos="vec4" eyePos="vec4" waveParams="vec4"/>
+      <Maps Diffuse="tex2d"/>
+   </Water>
    <Line ProgramPath="Shaders/Line">
       <VertexFormat>
          <vPos Type="vec3" D3D_Semantic="POSITION"/>
