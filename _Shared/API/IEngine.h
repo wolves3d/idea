@@ -157,7 +157,7 @@ struct ICamera
 	virtual const mat4 & GetProjMatrix() const = 0;
 	virtual const mat4 & GetViewProjMatrix() const = 0;
 
-	virtual void RenderFrustum() = 0;
+	virtual void RenderFrustum(dword color = 0xFFFFFFFF) = 0;
 
 	virtual bool Unproject( vec3 * pOutRay, const ivec2 & vScreen ) = 0;
 };
@@ -257,7 +257,13 @@ class CUniform
 		if ( pShader )
 		{
 			m_pShader	= pShader;
-			m_nID		= m_pShader->GetUniformID( szName );
+			m_nID		= m_pShader->GetUniformID( szName ); // FIXME!
+
+			if (INVALID_INDEX == m_nID)
+			{
+				DEBUG_ASSERT(!"invalid uniform!");
+			}
+
 			return;
 		}
 

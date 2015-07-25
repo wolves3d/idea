@@ -26,11 +26,11 @@ class CPlane
 		fOffset		*= fInvMag;
 	}
 
-	bool LineCollision(vec3 * outHitPoint, const Line & line)
+	bool LineCollision(vec3 * outHitPoint, const vec3 & vStart, const vec3 & vEnd)
 	{
 		// вычисляем расстояния между концами отрезка и плоскостью треугольника.
-		float r1 = Dot(vNormal, line.vStart - vOrigin);
-		float r2 = Dot(vNormal, line.vEnd - vOrigin);
+		float r1 = Dot(vNormal, vStart - vOrigin);
+		float r2 = Dot(vNormal, vEnd - vOrigin);
 
 		// если оба конца отрезка лежат по одну сторону от плоскости, то отрезок
 		// не пересекает треугольник.
@@ -40,11 +40,17 @@ class CPlane
 		if (0 != outHitPoint)
 		{
 			// вычисляем точку пересечения отрезка с плоскостью треугольника.
-			(*outHitPoint) = (line.vStart + ((line.vEnd - line.vStart) * (-r1 / (r2 - r1))));
+			(*outHitPoint) = (vStart + ((vEnd - vStart) * (-r1 / (r2 - r1))));
 		}
 
 		return true;
 	}
+
+	bool LineCollision(vec3 * outHitPoint, const Line & line)
+	{
+		return LineCollision(outHitPoint, line.vStart, line.vEnd);
+	}
+	
 
 	vec3	vNormal;
 	vec3	vOrigin;

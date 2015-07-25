@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include "EntityManager.h"
-#include "Shapes/Shape.h"
+//#include "Shapes/Shape.h"
 #include "_Shared/api/IXMLWrapper.h"
 
 #include "Abilities/ModelAbility.h"
