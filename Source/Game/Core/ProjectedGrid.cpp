@@ -4,11 +4,14 @@
 
 CProjectedGrid::CProjectedGrid()
 	: m_vertexDecl(NULL)
+	, m_vertexBuffer(NULL)
+	, m_indexBuffer(NULL)
 	, m_Material(NULL)
-	, m_pProjector(NULL)
+	, m_pCamera(NULL)
+	, m_pProjector2(NULL)
 {
-	m_gridWidth = 64;
-	m_gridHeight = 64;
+	m_gridWidth = 16;
+	m_gridHeight = 16;
 
 	Init();
 }
@@ -23,6 +26,7 @@ CProjectedGrid::~CProjectedGrid()
 void CProjectedGrid::Release()
 {
 	RELEASE(m_vertexBuffer);
+	RELEASE(m_indexBuffer);
 	RELEASE(m_Material);
 	DEL(m_vertexDecl);
 }
@@ -34,15 +38,43 @@ void CProjectedGrid::Init()
 
 	m_vertexDecl = g_pRenderer->CreateVertexDecl();
 	m_vertexDecl->SetStride(sizeof(GridVertex));
-	m_vertexDecl->AddAttr("vPos", NULL, TYPE_VEC3, 0);
-	m_vertexDecl->AddAttr("vTex", NULL, TYPE_VEC2, sizeof(vec3));
+
+	uint offset = 0;
+	m_vertexDecl->AddAttr("vPos", NULL, TYPE_VEC3, offset);
+	offset += sizeof(vec3);
+
+	m_vertexDecl->AddAttr("vTex0", NULL, TYPE_VEC2, offset);
+	offset += sizeof(vec2);
+
+	m_vertexDecl->AddAttr("vTangent", NULL, TYPE_VEC3, offset);
+	offset += sizeof(vec3);
+
+	m_vertexDecl->AddAttr("vBitangent", NULL, TYPE_VEC3, offset);
+	offset += sizeof(vec3);
+	m_vertexDecl->AddAttr("vNormal", NULL, TYPE_VEC3, offset);
 
 	m_Material = g_pEngine->CreateMaterial();
-	m_Material->SetShader(g_pRenderer->GetShader("Land"));
+	m_Material->SetShader(g_pRenderer->GetShader("Water"));
 	m_Material->SetTexture(DIFFUSE_MAP, g_pRenderer->GetSysTexture(EST_WHITE));
 
-	m_mvpUniform.AttachToShader("mMVP", m_Material->GetShader());
+	PTexture pTex;
+	//g_pEngine->LoadTexture(pTex, "texture.tga");
+	g_pEngine->LoadTexture(pTex, "normals.tga");
+	m_Material->SetTexture(DIFFUSE_MAP, pTex);
+
+	IShader * materialShader = m_Material->GetShader();
+	m_mvpUniform.AttachToShader("mMVP", materialShader);
+	m_lightPos.AttachToShader("vLightPos", materialShader);
+	m_eyePos.AttachToShader("eyePos", materialShader);
+	m_waveParams.AttachToShader("waveParams", materialShader);
+	m_uniformModelViewMatrix.AttachToShader("modelView", materialShader);
+
 	m_mvpUniform.Connect(m_Material);
+	m_lightPos.Connect(m_Material);
+	m_waveParams.Connect(m_Material);
+	m_eyePos.Connect(m_Material);
+	m_uniformModelViewMatrix.Connect(m_Material);
+
 
 	if (m_vertexBuffer = g_pRenderer->CreateVB())
 	{
@@ -69,31 +101,121 @@ void CProjectedGrid::Init()
 	}
 
 
-	m_pProjector = g_pEngine->CreateCamera();
-	m_pProjector->SetParams(25, 32, 32, 1, 100);
-	
-	//m_pProjector->SetPos(vec3(0, 0, 0));
+	/////////////////////////////////////////////////////////////////////////
+
+	const uint nIndexCount = ((m_gridWidth-1) * (m_gridHeight-1) * 6);
+	m_indexBuffer = g_pRenderer->CreateIB();
+	m_indexBuffer->SetAttrs(nIndexCount, TYPE_SHORT);
+
+	const uint bufferSize = (sizeof(short) * nIndexCount);
+	m_indexBuffer->Alloc(bufferSize, 0);
+
+	short * m_pIndices = (short *)m_indexBuffer->Lock(0, bufferSize);
+
+	for (uint y = 0; y < (m_gridHeight-1); ++y)
+	{
+		const uint nRawStart = ((m_gridWidth-1) * y);
+
+		for (uint x = 0; x < (m_gridWidth-1); ++x)
+		{
+			int nOffset = (nRawStart + x) * 6;
+			int nVertexOffset = (m_gridWidth * y) + x;
+
+			if (nOffset >= nIndexCount)
+			{
+				int a = 0;
+			}
+
+			// Первый треугльник
+			// v1 --- v2 
+			// |     /
+			// |   /
+			// | /
+			// v3
+			m_pIndices[nOffset] = nVertexOffset;					// v1
+			m_pIndices[nOffset + 1] = nVertexOffset + 1;			// v2
+			m_pIndices[nOffset + 2] = nVertexOffset + m_gridWidth;	// v3
+
+			// Воторой треугльник
+			//        v1 
+			//       / |
+			//     /   |
+			//   /     |
+			// v3 --- v2
+			m_pIndices[nOffset + 3] = nVertexOffset + 1;				// v1
+			m_pIndices[nOffset + 4] = nVertexOffset + m_gridWidth + 1;	// v2
+			m_pIndices[nOffset + 5] = nVertexOffset + m_gridWidth;		// v3
+		}
+	}
+
+	m_indexBuffer->Unlock();
+
+	m_pCamera = g_pEngine->CreateCamera();
+	m_pProjector2 = g_pEngine->CreateCamera();
+	m_pCamera->SetPos(vec3(0, 2, 0));
+	m_pCamera->SetParams(45, 1, 1, 1, 20);
+	m_pProjector2->SetParams(45, 1, 1, 1, 20);
+
+	//m_pCamera = g_pGame->m_pCamera;
 }
 
 float wave = 0;
 
 float CProjectedGrid::HeightFunc(float x, float z)
 {
-	return (0.3f * (sinf(4 * x + wave*2)));
+	//return (0.2f * (sinf(4 * x + wave * 2)));
+	return (0.08f * (sinf(4 * x + wave*2)));
 }
+
+
+void CProjectedGrid::UpdateNormals(GridVertex * vertexArray)
+{
+	const uint lastX = (m_gridWidth - 1);
+	const uint lastZ = (m_gridHeight - 1);
+	vec3 vU, vV, vZ;
+
+	for (uint z = 0; z < m_gridHeight; ++z)
+	{
+		for (uint x = 0; x < m_gridWidth; ++x)
+		{
+			vU = (lastX != x)
+				? vertexArray[1].vPos - vertexArray[0].vPos
+				: vertexArray[0].vPos - (vertexArray - 1)->vPos;
+
+			vV = (lastZ != z)
+				? vertexArray[m_gridWidth].vPos - vertexArray[0].vPos
+				: vertexArray[0].vPos - (vertexArray - m_gridWidth)->vPos;
+
+			vZ = Cross(vU, vV);
+
+			//vU.NormalizeTo(0.5f);
+			//vV.NormalizeTo(0.5f);
+			//vZ.NormalizeTo(0.5f);
+
+			//g_pEngine->PushLine(vertexArray[0].vPos, vertexArray[0].vPos + vU, 0xFFFF0000);
+			//g_pEngine->PushLine(vertexArray[0].vPos, vertexArray[0].vPos + vV, 0xFF00FF00);
+			//g_pEngine->PushLine(vertexArray[0].vPos, vertexArray[0].vPos + vZ, 0xFF0000FF);
+
+			vertexArray->vTangent = vU.Normalize();
+			vertexArray->vBitangent = vV.Normalize();
+			vertexArray->vNormal = vZ.Normalize();
+
+			++vertexArray;
+		}
+	}
+}
+
 
 void CProjectedGrid::Update()
 {
 	Project();
 
-	mat4 v = m_pProjector->GetViewProjMatrix();
-	v.Inverse();
-	v = m_invViewProj;
+	//mat4 v = m_pProjector->GetViewProjMatrix();
+	//v.Inverse();
+	mat4 v = m_invViewProj;
 
 	//v = m_rangeMatrix;
 	//v.Mult(m_invViewProj);
-
-	//v = m_projector;
 
 	uint sizeInBytes = (sizeof(GridVertex)* m_gridVertexCount);
 	GridVertex * pVertices = (GridVertex *)(m_vertexBuffer->Lock(0, sizeInBytes));
@@ -103,55 +225,50 @@ void CProjectedGrid::Update()
 	
 	CPlane waterPlane(vec3::vUp, 0);
 
+	const float xStep = 2.0f * (1.0f / (m_gridWidth - 1));
+	const float yStep = 2.0f * (1.0f / (m_gridHeight - 1));
+	float yCoord = -1.0f;
+	GridVertex * curVertex = pVertices;
+
 	for (uint z = 0; z < m_gridHeight; ++z)
 	{
-		float step = 10 * ((float)z / (m_gridHeight - 1));
-		float h = 0.1f * sinf(wave + step);
+		float xCoord = -1.0f;
 
 		for (uint x = 0; x < m_gridWidth; ++x)
 		{
-			uint offset = (z * m_gridHeight) + x;
-			GridVertex * vertex = (pVertices + offset);
+			vec4 a(xCoord, yCoord, -1, 1);
+			vec4 b(xCoord, yCoord, +1, 1);
+			a.Multiply(m_invViewProj);
+			b.Multiply(m_invViewProj);
+			a.w = 1.f / a.w;
+			b.w = 1.f / b.w;
 
-			//if (false)
-			{
-				vec4 a(2 * ((float)x / (m_gridWidth - 1)) - 1, 2 * ((float)z / (m_gridHeight - 1)) - 1, -1, 1);
-				vec4 b(2 * ((float)x / (m_gridWidth - 1)) - 1, 2 * ((float)z / (m_gridHeight - 1)) - 1, +1, 1);
-
-				a.Multiply(v);
-				b.Multiply(v);
-
-				a.w = 1.f / a.w;
-				b.w = 1.f / b.w;
-
-				vec3 s((a.x * a.w), (a.y * a.w), (a.z * a.w));
-				//s.Multiply(v);
-
-				vec3 e((b.x * b.w), (b.y * b.w), (b.z * b.w));
-				//e.Multiply(v);
-
-				//g_pEngine->PushLine(s, e);
-
-				vertex->vPos = vec3::vNull;
-				waterPlane.LineCollision(&vertex->vPos, Line(s, e));
-
-				//vertex->vPos.Set(((float)x / (m_gridWidth - 1)), ((float)z / (m_gridHeight - 1)), 0);
-				vertex->vPos.y = h;
-				vertex->vPos.y = HeightFunc(vertex->vPos.x, vertex->vPos.z);
+			vec3 s((a.x * a.w), (a.y * a.w), (a.z * a.w));
+			vec3 e((b.x * b.w), (b.y * b.w), (b.z * b.w));
 				
-				//vertex->vPos.Multiply(m);
-			}
+			waterPlane.LineCollision(&curVertex->vPos, s, e);
+			curVertex->vPos.y = HeightFunc(curVertex->vPos.x, curVertex->vPos.z);
+
+			curVertex->vTex.Set(curVertex->vPos.x * 0.1f, curVertex->vPos.z * 0.1f);
+			xCoord += xStep;
+			++curVertex;
 		}
+
+		yCoord += yStep;
 	}
+
+	UpdateNormals(pVertices);
 	
 	wave += 0.001f;
 
 	m_vertexBuffer->Unlock();
 
-	//m_pProjector->SetPos(vec3(5*sinf(wave), 5, 5 * cosf(wave)));
-	m_pProjector->SetPos(vec3(0, 5, 5));
-	m_pProjector->LookAt(vec3(5 * sinf(0.5f * wave), 0, 5 * cosf(0.5f * wave)), vec3::vUp);
-	//m_pProjector->LookAt(vec3(1, 0, 0), vec3::vUp);
+	m_lookPoint.Set(5 * sinf(0.5f * wave), 0, 5 * cosf(0.5f * wave));
+	m_lookPoint.Set(5, 0, 0);
+	m_pCamera->LookAt(m_lookPoint, vec3::vUp);
+
+	m_pProjector2->SetPos(m_pCamera->GetPos() + vec3(0, 2, 0));
+	m_pProjector2->LookAt(m_lookPoint, vec3::vUp);
 }
 
 
@@ -159,11 +276,11 @@ void CProjectedGrid::Project()
 {
 	// -------------------------------------------------------------------------
 
-	ICamera * projector = m_pProjector;
-	projector = g_pGame->m_pCamera;
+	ICamera * projector = m_pProjector2;
+	//projector = g_pGame->m_pCamera;
 
-	projector->RenderFrustum();
-
+	m_pCamera->RenderFrustum(0xFF000000);
+	m_pProjector2->RenderFrustum(0xFFFF0000);
 
 	CPlane waterPlane(vec3::vUp, 0);
 
@@ -178,6 +295,7 @@ void CProjectedGrid::Project()
 	{
 		g_pEngine->PushBBox(bbox(hitPoint, 0.1f), 0xFFFF0000);
 		hits.push_back(hitPoint);
+		m_bottomLeftHit = hitPoint;
 	}
 
 	projector->Unproject(linePoints, ivec2(viewport.x, 0));
@@ -185,6 +303,7 @@ void CProjectedGrid::Project()
 	{
 		g_pEngine->PushBBox(bbox(hitPoint, 0.1f), 0xFFFF0000);
 		hits.push_back(hitPoint);
+		m_bottomRightHit = hitPoint;
 	}
 
 	projector->Unproject(linePoints, ivec2(viewport.x, viewport.y));
@@ -192,6 +311,7 @@ void CProjectedGrid::Project()
 	{
 		g_pEngine->PushBBox(bbox(hitPoint, 0.1f), 0xFFFF0000);
 		hits.push_back(hitPoint);
+		m_topRightHit = hitPoint;
 	}
 
 	projector->Unproject(linePoints, ivec2(0, viewport.y));
@@ -199,38 +319,38 @@ void CProjectedGrid::Project()
 	{
 		g_pEngine->PushBBox(bbox(hitPoint, 0.1f), 0xFFFF0000);
 		hits.push_back(hitPoint);
+		m_topLeftHit = hitPoint;
 	}
 
 	m_invViewProj = (projector->GetViewProjMatrix());
-	//m_invViewProj = (projector->GetViewMatrix());
+//	m_invViewProj = (projector->GetProjMatrix());
 	m_invViewProj.Inverse();
-	m_projector = m_invViewProj;
 
 	float minX = 100000;
 	float minY = 100000;
 	float maxX = -100000;
 	float maxY = -100000;
 
-	mat4 tt = m_rangeMatrix;
-	tt.Inverse();
+	mat4 mz = projector->GetViewProjMatrix();
+	mz.Inverse();
 
 	for (uint i = 0; i < hits.size(); ++i)
 	{
 		vec3 test = hits[i];
-		test.Multiply(tt);
+		//test.Multiply(mz);
 		g_pEngine->PushBBox(bbox(test, 0.1f), 0xFF00FF00);
 
 		if (minX > test.x)
 			minX = test.x;
 
-		if (minY > test.y)
-			minY = test.y;
+		if (minY > test.z)
+			minY = test.z;
 
 		if (maxX < test.x)
 			maxX = test.x;
 
-		if (maxY < test.y)
-			maxY = test.y;
+		if (maxY < test.z)
+			maxY = test.z;
 	}
 
 	m_rangeMatrix.pRows[0].Set(maxX - minX, 0, 0, minX);
@@ -238,13 +358,16 @@ void CProjectedGrid::Project()
 	m_rangeMatrix.pRows[2].Set(0, 0, 1, 0);
 	m_rangeMatrix.pRows[3].Set(0, 0, 0, 0);
 
-	mat4 t = m_rangeMatrix;
-	t.Mult(m_projector);
-	m_projector = t;
-	
 
-	minX = 0;
-	minY = 0;
+      	//mat4 t = m_rangeMatrix;
+      	//t.Mult(m_invViewProj);
+     	//m_projector = t;
+
+ 	//mat4 t = m_invViewProj;
+	//t.Mult(m_rangeMatrix);
+	//m_projector = t;
+	m_projector = projector->GetViewMatrix();
+	//m_projector.Inverse();
 }
 
 
@@ -266,5 +389,29 @@ void CProjectedGrid::Render()
 	const mat4 & mVP = g_pGame->m_pCamera->GetViewProjMatrix();
 	m_mvpUniform.SetValue(mVP.pRows, 4);
 
-	m_vertexBuffer->Render(m_vertexDecl, 0, m_gridVertexCount, PRIM_POINT);
+	const mat4 & modelViewMatrix = g_pGame->m_pCamera->GetViewMatrix();
+	m_uniformModelViewMatrix.SetValue(modelViewMatrix.pRows, 4);
+
+	//m_lookPoint.Set(5 * sinf(0.5f * wave), 0, 5 * cosf(0.5f * wave));
+
+	
+
+	vec4 light(8  + 3.0f * cosf(2 * wave), 4 + 1.5f * sinf(2 * wave), 0, 1);
+	//vec4 light(8, 2, 0, 1);
+	//const vec3 & dirLightPos = m_pProjector2->GetPos();
+	//vec4 light(dirLightPos.x, dirLightPos.y, dirLightPos.z, 1);
+
+	m_lightPos.SetValue(&light, 1);
+	g_pEngine->PushBBox(bbox(vec3(light.x, light.y, light.z), 0.1f), 0xFFFFFFF);
+
+	vec4 waveParams(wave * 0.03f, 0, 0, 0);
+	m_waveParams.SetValue(&waveParams, 1);
+
+
+	const vec3 & camPos = g_pGame->m_pCamera->GetPos();
+	vec4 eye(camPos.x, camPos.y, camPos.z, 1);
+	m_eyePos.SetValue(&eye, 1);
+
+	m_vertexBuffer->RenderIndexed(m_vertexDecl, m_indexBuffer, PRIM_TRIANGLE);
+	//m_vertexBuffer->Render(m_vertexDecl, 0, m_gridVertexCount, PRIM_POINT);
 }

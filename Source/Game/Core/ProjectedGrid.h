@@ -16,30 +16,45 @@ class CProjectedGrid
 
 	private:
 
+		struct GridVertex
+		{
+			vec3 vPos;
+			vec2 vTex;
+
+			vec3 vTangent;
+			vec3 vBitangent;
+			vec3 vNormal;
+		};
+
 		void Update();
 		void Project();
 		float HeightFunc(float x, float z);
 
+		void UpdateNormals(GridVertex * vertexArray);
 		uint m_gridWidth;
 		uint m_gridHeight;
 		uint m_gridVertexCount;
 
 		IVertexDecl * m_vertexDecl;
 		PVertexBuffer m_vertexBuffer;
+		IIndexBuffer * m_indexBuffer;
 		IMaterial * m_Material;
+
 		CUniform m_mvpUniform;
+		CUniform m_uniformModelViewMatrix;
+		CUniform m_lightPos;
+		CUniform m_eyePos;
+		CUniform m_waveParams;
 
-		struct GridVertex
-		{
-			vec3 vPos;
-			vec2 vTex;
-		};
-
-		ICamera * m_pProjector;
+		ICamera * m_pCamera;
+		ICamera * m_pProjector2;
+		vec3 m_lookPoint;
 
 		mat4 m_rangeMatrix;
 		mat4 m_invViewProj;
 		mat4 m_projector;
+
+		vec3 m_topLeftHit, m_topRightHit, m_bottomLeftHit, m_bottomRightHit;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
