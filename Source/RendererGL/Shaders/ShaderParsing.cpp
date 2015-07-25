@@ -56,6 +56,7 @@ bool CRenderer_GL::CreateShader( const char * szPath, IVertexDecl * pDecl,
 
 	if ( pShader->IsValid() )
 	{
+		SysWrite(Va("\t%s\n", szPath));
 		m_ShaderList.Add( pShader );
 		return bSuccess;
 	}
