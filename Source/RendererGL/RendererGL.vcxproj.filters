@@ -162,5 +162,8 @@
     <ClInclude Include="..\..\_Shared\Math\vec4.h">
       <Filter>Source Files\_Shared\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Texture\Texture.h">
+      <Filter>Source Files\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

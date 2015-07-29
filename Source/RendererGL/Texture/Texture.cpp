@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Common.h"
+#include "Texture.h"
 
 /*
 ================================================================================
@@ -8,25 +9,20 @@
 //	Desc:
 ================================================================================
 */
-class CTexture : public ITexture
-{
-	friend CRenderer_GL;
 
-	public :
-
-		inline CTexture() :
+		CTexture::CTexture() :
 			m_nTextureID( 0 ),
 			m_nRefCount	( 1 )
 		{
 			//m_pTexMaps = NEW PTexture [ 1 ];
 		}
 
-		~CTexture()
+		CTexture::~CTexture()
 		{
 			glDeleteTextures( 1, &m_nTextureID );
 		}
 
-		void Release()
+		void CTexture::Release()
 		{
 			DecRefCount();
 
@@ -36,7 +32,7 @@ class CTexture : public ITexture
 			}
 		}
 
-		EResult SetRef( PTexture pRefTexture )
+		EResult CTexture::SetRef(PTexture pRefTexture)
 		{
 			if ( pRefTexture )
 			{
@@ -48,15 +44,17 @@ class CTexture : public ITexture
 			return R_OK;
 		}
 
-		PTexture GetRef()
+		PTexture CTexture::GetRef()
 		{
 			return m_pRefTexture;
 		}
 
-		EResult Init( const TImage & pImage, EAccessType eAccess )
+		EResult CTexture::Init(const TImage & pImage, EAccessType eAccess)
 		{
 			if ( !m_nTextureID )
 				return R_INVALID_OP;
+
+			m_desc = pImage;
 
 			//glEnable( GL_TEXTURE_2D );
 
@@ -71,11 +69,13 @@ class CTexture : public ITexture
 			case TImage::IMG_FMT_RGB8 :
 				nIntFormat	= GL_RGB8;
 				nFormat		= GL_BGR_EXT;
+				m_desc.nSize = (m_desc.nWidth * m_desc.nHeight * 3);
 				break;
 
 			case TImage::IMG_FMT_RGBA8 :
-				nIntFormat	= GL_RGBA8;
+				nIntFormat = GL_RGBA8; // GL_RGBA32F_ARB
 				nFormat		= GL_BGRA_EXT;
+				m_desc.nSize = (m_desc.nWidth * m_desc.nHeight * 4);
 				break;
 
 			default:
@@ -104,9 +104,7 @@ class CTexture : public ITexture
 			return R_OK;
 		}
 
-		EResult	SetFilter( TextureFormat eFilter );
-
-		EResult	Bind()
+		EResult	CTexture::Bind()
 		{
 			if ( m_pRefTexture )
 				return m_pRefTexture->Bind();
@@ -120,22 +118,22 @@ class CTexture : public ITexture
 			return R_OK;
 		}
 
-		inline const char * GetName() const
+		 const char * CTexture::GetName() const
 		{
 			return m_sName.GetString();
 		}
 
-		uint GetRefCount() const
+		 uint CTexture::GetRefCount() const
 		{
 			return m_nRefCount;
 		}
 
-		void IncRefCount()
+		 void CTexture::IncRefCount()
 		{
 			m_nRefCount++;
 		}
 
-		void DecRefCount()
+		 void CTexture::DecRefCount()
 		{
 			DEBUG_ASSERT( 0 != m_nRefCount )
 
@@ -145,13 +143,10 @@ class CTexture : public ITexture
 			}
 		}
 
-	private :
-
-		CStr		m_sName;
-		uint		m_nTextureID;
-		uint		m_nRefCount;
-		PTexture	m_pRefTexture;
-};
+		 const TImage & CTexture::GetDesc()
+		 {
+			 return m_desc;
+		 }
 
 
 /*
@@ -202,29 +197,35 @@ EResult CTexture::SetFilter( TextureFormat eFilter )
 //	Desc:
 ================================================================================
 */
+
+CTexture * CRenderer_GL::CreateTexture(const char * szName)
+{
+	CTexture * pTexture = NEW CTexture;
+
+	if (NULL != pTexture)
+	{
+		glGenTextures(1, &pTexture->m_nTextureID);
+
+		if (pTexture->m_nTextureID)
+		{
+			pTexture->m_sName = szName;
+			return pTexture;
+		}
+
+		DEL(pTexture);
+	}
+
+	return NULL;
+}
+
+
 EResult	CRenderer_GL::CreateTexture( PTexture & pOutTexture, const char * szName )
 {
 	if ( !szName )
 		return R_INVALID_ARG;
 
-	CTexture * pLocalTexture = NEW CTexture;
-
-	if ( !pLocalTexture )
-		return R_OUT_OF_MEMORY;
-
-	glGenTextures( 1, &pLocalTexture->m_nTextureID );
-
-	if ( pLocalTexture->m_nTextureID )
-	{
-		pLocalTexture->m_sName = szName;
-
-		//pLocalTexture->SetData( tImage );
-
-		pOutTexture = pLocalTexture;
-		return R_OK;
-	}
-
-	return R_GENERIC_ERROR;
+	pOutTexture = CreateTexture(szName);
+	return R_OK;
 }
 
 
