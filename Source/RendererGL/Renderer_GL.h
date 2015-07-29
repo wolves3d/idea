@@ -16,6 +16,8 @@ enum EGLExt
 };
 
 
+// Forward declarartions
+class CTexture;
 
 
 /**
@@ -59,6 +61,8 @@ class CRenderer_GL : public IRenderer
 		// Tip: Textures
 		//----------------------------------------------------------------------
 		EResult		CreateTexture	( PTexture & pTexture, const char * szName );
+		CTexture *	CreateTexture(const char * szName);
+
 		PTexture	GetSysTexture	( ESysTexture eTexture );
 		void		SetDefTexture	( PTexture & pTexture );
 
@@ -209,14 +213,18 @@ class CRenderer_GL : public IRenderer
 extern CRenderer_GL * g_pRenderer;
 
 extern GLenum g_pElemTypeGL[ LAST_TYPE ];
-extern GLenum g_pElemCountGL[ LAST_TYPE ];
+extern GLenum g_pElemCountGL[LAST_TYPE];
 
 ////////////////////////////////////////////////////////////////////////////////
 
 
 #ifdef _DEBUG
 
-#define GL_VALIDATE if( GL_NO_ERROR != glGetError() ) g_pSystem->AssertMsg( __FILE__, __LINE__, "GL assertion failed!" )
+#define GL_VALIDATE \
+	do { \
+	const GLenum errCode = glGetError(); \
+	if (GL_NO_ERROR != errCode) \
+		g_pSystem->AssertMsg(__FILE__, __LINE__, Va("OpenGL error! enumID = %#04x", errCode)); } while (false);
 
 #else
 
