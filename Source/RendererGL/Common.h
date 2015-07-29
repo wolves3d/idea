@@ -36,8 +36,9 @@
 #include "Templates/Container.h"
 #include "Templates/Vector.h"
 
-#include "API/IRenderer.h"
 #include "API/IVfs.h"
+#include "API/IRenderer.h"
+#include "API/IEngine.h"
 #include "API/IXMLWrapper.h"
 
 //------------------------------------------------------------------------------
