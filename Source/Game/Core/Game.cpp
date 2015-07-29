@@ -254,20 +254,32 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 	////////////////////////////////////////////////////////////////////////
 
 	IMaterial * pRTM = g_pEngine->CreateMaterial();
-
-	ivec2 vSize( 800, 600 );
+	IMaterial * pFrameShader = g_pEngine->CreateMaterial();
+	ISprite2D * spriteRT = NULL;
+	ivec2 rtSize(256, 256);
 	IRenderTarget * pRT = g_pRenderer->CreateRenderTarget();
 
-	/*
+	
 	PTexture pBackTex;
 
-	if ( pRT )
+	if (NULL != pRT)
 	{
-		pRT->Init( vSize.x, vSize.y );
+		pRT->Init(rtSize.x, rtSize.y);
 		pRTM->SetShader( g_pRenderer->GetShader( UI_SHADER ) );
-		pRTM->SetTexture( DIFFUSE_MAP, g_pRenderer->GetSysTexture( EST_DEFAULT ) );
-		//g_pEngine->LoadTexture( pBackTex, "back.tga" );
-		//pRTM->SetTexture( DIFFUSE_MAP, pBackTex );
+		
+		pFrameShader->SetShader(g_pRenderer->GetShader("WaterQuad"));
+		//pFrameShader->SetTexture(DIFFUSE_MAP, g_pRenderer->GetSysTexture(EST_WHITE));
+		pFrameShader->SetTexture(DIFFUSE_MAP, pTex);
+		pFrameShader->EnableDepthTest(false);
+
+// 		CUniform ccc("vColorMod", pFrameShader->GetShader());
+// 		ccc.Connect(pFrameShader);
+// 		ccc.SetValue(&vec4(1, 1, 1, 1), 1);
+
+
+
+		PTexture rtTexture = pRT->GetTexture();
+		pRTM->SetTexture(DIFFUSE_MAP, rtTexture);
 		//pRTM->EnableAlphaTest( true );
 		//pRTM->EnableAlphaBlend( true );
 		//pRTM->BlendFunc( BF_SRC_ALPHA, BF_ONE );
@@ -278,7 +290,14 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 		CUniform uColorMod( "vColorMod", pRTM->GetShader() );
 		uColorMod.Connect( pRTM );
 		uColorMod.SetValue( &vec4( 1, 1, 1, 1 ), 1 );
-	}*/
+
+
+
+		spriteRT = g_pUIManager->CreateSprite();
+		spriteRT->SetPos(0, 0);
+		spriteRT->SetSize(rtSize.x, rtSize.y);
+		spriteRT->SetMaterial(pRTM);
+	}
 
 	////////////////////////////////////////////////////////////////////////
 
@@ -289,31 +308,38 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 
 	while ( pWin->Idle() )
 	{
-		g_pRenderer->SetViewPort( vSize );
-/*
+		g_pEngine->DrawFullframeQuad(pRT, pFrameShader);
+		//pFrameShader->Assign();
+		//pRT->DrawFullframeQuad();
+		/*
+		g_pRenderer->SetViewPort(ivec2(800, 600));
+
 		ivec2 vp = g_pRenderer->GetViewPort();
 		g_pRenderer->SetRenderTarget( pRT );
 		{
-			g_pRenderer->SetViewPort( vSize );
+			g_pRenderer->SetViewPort(rtSize);
 			g_pRenderer->ClearScene();
-
+			
 			mat4 m;
-			m.Projection( 34.516f, 4.f / 3.f, 1, 200 );
-			g_pRenderer->SetMatrix( MM_PROJECTION, m );
-
+			/*
+			m.SetProjection(34.516f, 4.f / 3.f, 1, 200);
+			g_pRenderer->SetMatrix( MM_PROJECTION, m);
+			*
 			m.Identity();
 			g_pRenderer->Circle3D( m, 5, 0xFFFF0000 );
-
+			/*
 			ICamera * pCam = pScene->GetCamera();
 			pCam->BuildMatrix( m );
 			g_pRenderer->SetMatrix( MM_MODELVIEW, m );
-
-			if ( pEnt )
-				pEnt->Render();
+			*
+			if ( pEnt2 )
+				pEnt2->Render();
+				
 		}
 		g_pRenderer->SetRenderTarget( NULL );
 		g_pRenderer->SetViewPort( vp );
-*/
+		*/
+
 		g_pRenderer->ClearScene();
 
 			//mat4 mCam;
@@ -350,6 +376,8 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 			//pTex->Bind();
 			
 			grid.Render();
+
+			g_pUIManager->PushSprite(spriteRT);
 
 			g_pEngine->Update();
 
