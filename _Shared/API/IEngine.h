@@ -739,6 +739,8 @@ struct IEngine : public IBaseIntf
 	virtual IMaterial *		LoadMaterial( const char *szFileName ) = 0;
 	virtual IParticleSystem * CreateParticleSys() = 0;
 
+	virtual bool			DrawFullframeQuad(IRenderTarget * frameBuffer, IMaterial * pMaterial) = 0;
+
 	virtual void PushBBox(const bbox & box, dword dwColor) = 0;
 	virtual void PushLine( const vec3 & vStart, const vec3 & vEnd, dword dwColor = 0xFFFFFFFF) = 0;
 

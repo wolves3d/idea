@@ -62,6 +62,8 @@ struct ITexture
 //	virtual EResult		SetData		( const TImage & tImage )				= 0;
 	virtual EResult		Bind		()										= 0;
 
+	virtual const TImage & GetDesc() =0;
+
 	virtual EResult		SetRef		( CSafePointer < ITexture > pRefTexture ) = 0;
 	virtual CSafePointer < ITexture >	GetRef		()						= 0;
 	//virtual EResult		SetSubData	( const TImage * pImage ) = 0;
@@ -353,6 +355,9 @@ struct IVertexBuffer
 	virtual void	Unlock			() = 0;
 	virtual EResult UpdateData		( size_t nOffset, void * pData, size_t nSize ) = 0;
 
+	virtual uint	GetHandle() = 0;
+	virtual size_t	GetSize() = 0;
+
 	virtual void	RenderIndexed	( IVertexDecl * pDecl, IIndexBuffer * pIB, EPrimitive ePrim, uint nFirst = 0, uint nSize = 0 ) = 0;
 	virtual void	Render			( IVertexDecl * pDecl, uint nFirst, uint nCount, EPrimitive ePrim ) = 0;
 };
@@ -403,6 +408,9 @@ struct IRenderTarget
 	virtual bool		Init		( uint nWidth, uint nHeight )	= 0;
 	virtual PTexture	GetTexture	()								= 0;
 	virtual bool		Bind		()								= 0;
+
+	// for GPU tricks
+	virtual	bool		CopyToVertexBuffer(IVertexBuffer * pDest)	= 0;
 };
 
 
