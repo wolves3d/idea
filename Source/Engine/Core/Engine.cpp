@@ -184,6 +184,34 @@ EResult CEngine::Init( HINSTANCE hInst )
 
 	m_pEntityManager	= NEW CEntityManager;
 
+	//----------------------------------------------------------
+	// Tip: full frame quad
+	//----------------------------------------------------------
+	vec2 vertices[] =
+	{
+		vec2(-1.0f, -1.0f),
+		vec2(0.0f, 0.0f),
+
+		vec2(-1.0f, 1.0f),
+		vec2(0.0f, 1.0f),
+
+		vec2(1.0f, 1.0f),
+		vec2(1.0f, 1.0f),
+
+		vec2(1.0f, -1.0f),
+		vec2(1.0f, 0.0f)
+	};
+
+	const uint bufferSize = sizeof(vertices);
+	m_fullFrameQuad.vertexBuffer = g_pRenderer->CreateVB();
+	m_fullFrameQuad.vertexBuffer->Alloc(bufferSize, 0);
+	m_fullFrameQuad.vertexBuffer->UpdateData(0, vertices, bufferSize);
+
+	m_fullFrameQuad.vertexDecl = g_pRenderer->CreateVertexDecl();
+	m_fullFrameQuad.vertexDecl->SetStride(2 * sizeof(vec2));
+	m_fullFrameQuad.vertexDecl->AddAttr("vPos", NULL, TYPE_VEC2, 0);
+	m_fullFrameQuad.vertexDecl->AddAttr("vTex0", NULL, TYPE_VEC2, sizeof(vec2));
+
 	return R_OK;
 }
 
@@ -199,6 +227,10 @@ CEngine::~CEngine()
 
 	m_lines.pLinesBuffer->Unlock();
 	RELEASE( m_lines.pLinesBuffer );
+
+	RELEASE(m_fullFrameQuad.vertexBuffer);
+	DEL(m_fullFrameQuad.vertexDecl);
+
 
 	DEL( m_pWin );
 	DEL( m_pImageManager );
@@ -423,4 +455,66 @@ void CEngine::Sprite2D( IMaterial * pMat, const ivec2 & vPos, const ivec2 & vSiz
 			g_pRenderer->PopMatrix( MM_TEXTURE );
 			*/
 	}
+}
+
+
+bool CEngine::DrawFullframeQuad(IRenderTarget * frameBuffer, IMaterial * pMaterial)
+{
+	PTexture frameBufferTex = frameBuffer->GetTexture();
+	const TImage & textureDesc = frameBufferTex->GetDesc();
+
+	ivec2 prevViewport = g_pRenderer->GetViewPort();
+	g_pRenderer->SetRenderTarget(frameBuffer);
+	g_pRenderer->SetViewPort(ivec2(textureDesc.nWidth, textureDesc.nHeight));
+
+	//g_pRenderer->ClearScene();
+
+	pMaterial->Assign();
+
+	m_fullFrameQuad.vertexBuffer->Render(
+		m_fullFrameQuad.vertexDecl,
+		0, 4, PRIM_QUAD);
+
+	
+	/*
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, (GLdouble)textureDesc.nWidth, 0.0, (GLdouble)textureDesc.nHeight, -1.0, 1.0);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	// render
+
+	glBegin(GL_QUADS);
+
+	glVertex2f(-1.0f, -1.0f);
+	//glTexCoord2f(0.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f);
+
+	glVertex2f(-1.0f, 1.0f);
+	//glTexCoord2f(0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f);
+
+	glVertex2f(1.0f, 1.0f);
+	//glTexCoord2f(1.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f);
+
+	glVertex2f(1.0f, -1.0f);
+	//glTexCoord2f(1.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);
+
+	glEnd();
+	GL_VALIDATE;
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	*/
+	g_pRenderer->SetRenderTarget(NULL);
+	g_pRenderer->SetViewPort(prevViewport);
+
+	return false; // undone
 }

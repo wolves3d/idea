@@ -65,6 +65,8 @@ class CEngine : public IEngine, public IInputHandler
 
 		IEntityManager * GetEntityManager();
 
+		bool DrawFullframeQuad(IRenderTarget * frameBuffer, IMaterial * pMaterial);
+
 		void PushLine	( const vec3 & vStart, const vec3 & vEnd, dword dwColor = 0xFFFFFFFF);
 		void PushBBox	( const bbox & box, dword dwColor );
 		void FlushLines	( const mat4 & mWVP );
@@ -133,6 +135,12 @@ class CEngine : public IEngine, public IInputHandler
 			IVertexDecl *	pVDecl;
 			IMaterial *		pMaterial;
 		} m_lines;
+
+		struct FullFrameQuad
+		{
+			PVertexBuffer vertexBuffer;
+			IVertexDecl * vertexDecl;
+		} m_fullFrameQuad;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
