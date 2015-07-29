@@ -40,6 +40,13 @@
       <Constants mMVP="mat4" modelView="mat4" vLightPos="vec4" eyePos="vec4" waveParams="vec4"/>
       <Maps Diffuse="tex2d"/>
    </Water>
+  <WaterQuad ProgramPath="Shaders/WaterQuad">
+	<VertexFormat>
+		<vPos Type="vec2" D3D_Semantic="POSITION"/>
+		<vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
+	</VertexFormat>
+	<Maps Diffuse="tex2d"/>
+   </WaterQuad>
    <Line ProgramPath="Shaders/Line">
       <VertexFormat>
          <vPos Type="vec3" D3D_Semantic="POSITION"/>
