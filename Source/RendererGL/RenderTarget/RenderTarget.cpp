@@ -1,6 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "Common.h"
+#include "../Texture/Texture.h"
 
 /**
 *
@@ -16,13 +17,15 @@ class CRenderTarget : public IRenderTarget
 	PTexture	GetTexture	();
 	bool		Bind		();
 
+	bool		CopyToVertexBuffer(IVertexBuffer * pDest);
+
 	private:
 
 		GLuint nFrameBuffer;  // color render target
 		GLuint nDepthBuffer; // depth render target
 		GLuint stencil_rb; // depth render target
 
-		PTexture m_pTexture;
+		CTexture * m_pTexture;
 
 		uint m_nListID;
 };
@@ -63,7 +66,8 @@ bool CRenderTarget::Init( uint nWidth, uint nHeight )
 		tImage.pData	= NULL;
 	};
 
-	g_pRenderer->CreateTexture( m_pTexture, /*tImage,*/ "frame_buffer" );
+	m_pTexture = g_pRenderer->CreateTexture("frame_buffer");
+	m_pTexture->Init(tImage, EAT_IMMUTABLE);
 
 	glGenFramebuffersEXT( 1, &nFrameBuffer );
 	GL_VALIDATE;
@@ -144,12 +148,46 @@ bool CRenderTarget::Bind()
 }
 
 
+bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
+{
+	const TImage & textureDesc = m_pTexture->GetDesc();
+	if (textureDesc.nSize != pDest->GetSize())
+	{
+		DEBUG_ASSERT("!incompatible buffer sizes!");
+		return false;
+	}
+
+	g_pRenderer->SetRenderTarget(this);
+
+	// set source buffer for reading
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+
+	glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT, pDest->GetHandle());
+	glReadPixels(
+		0, 0,
+		textureDesc.nWidth, textureDesc.nHeight,
+		GL_RGBA, GL_FLOAT,
+		NULL	// destination buffer pointer
+		);
+
+	// disable buffer for reading
+	glReadBuffer(GL_NONE);
+	glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT, 0);
+	
+	g_pRenderer->SetRenderTarget(NULL);
+
+	return true;
+}
+
+
 /**
 *
 */
 PTexture CRenderTarget::GetTexture()
 {
-	return m_pTexture;
+	PTexture res;
+	res = m_pTexture;
+	return res;
 }
 
 
@@ -192,14 +230,15 @@ bool CRenderer_GL::SetRenderTarget( IRenderTarget * pRT )
 	if ( false == g_pRenderer->IsExtSupported( EXT_GL_FBO ) )	
 		return false;
 
-	if ( pRT )
+	if (NULL == pRT)
 	{
-		pRT->Bind();
+		// NULL means default render target (frame buffer)
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		GL_VALIDATE;
 	}
 	else
 	{
-		glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, 0 );
-		GL_VALIDATE;
+		pRT->Bind();
 	}
 
 	return true;

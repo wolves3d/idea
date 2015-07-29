@@ -35,6 +35,9 @@ class CVertexBuffer : public IVertexBuffer
 	void	RenderIndexed	( IVertexDecl * pDecl, IIndexBuffer * pIB, EPrimitive ePrim, uint nFirst = 0, uint nSize = 0 );
 	void	Render			( IVertexDecl * pDecl, uint nFirst, uint nCount, EPrimitive ePrim );
 
+	uint	GetHandle() { return m_nBufferID; }
+	size_t	GetSize() { return m_nSize; }
+
 	//--------------------------------------------------------------------------
 	// Tip: Private methods & fields
 	//--------------------------------------------------------------------------
