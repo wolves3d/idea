@@ -240,7 +240,20 @@ bool CBaseShader::SetFragmentProgram( const char * szSource, bool bGLSL )
 
 		GLint compiled = 0;
 		glGetObjectParameterivARB( hShader, GL_OBJECT_COMPILE_STATUS_ARB, &compiled );
-		DEBUG_ASSERT( compiled );
+
+		if (false == compiled)
+		{
+			int maxLength = 0;
+			glGetObjectParameterivARB(hShader,
+				GL_OBJECT_INFO_LOG_LENGTH_ARB, &maxLength);
+
+			char *infoLog = NEW char[maxLength];
+			glGetInfoLogARB(hShader, maxLength, &maxLength, infoLog);
+
+			MessageBox(NULL, infoLog, "Fragment program compilation error", MB_ICONEXCLAMATION);
+			DEL_ARRAY(infoLog);
+			return false;
+		}
 
 		glAttachObjectARB( m_hProgram, hShader );
 		glDeleteObjectARB( hShader );
