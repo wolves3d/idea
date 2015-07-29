@@ -87,10 +87,10 @@ bool CMaterial::Assign()
 	//--------------------------------------------------------------------------
 	g_pRenderer->SetSampler( DIFFUSE_MAP, m_pTexMaps[ 0 ] );
 
-	if ( m_pTexMaps[ 0 ] )
+	/*if ( m_pTexMaps[ 0 ] )
 	{
 		m_pTexMaps[ 0 ]->Bind();
-	}
+	}*/
 
 	//--------------------------------------------------------------------------
 	// Tip: Alpha blend setup
