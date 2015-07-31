@@ -8,27 +8,41 @@
 */
 class CRenderTarget : public IRenderTarget
 {
-	friend CRenderer_GL;
-	public:
+friend CRenderer_GL;
+public:
+	CRenderTarget();
+	~CRenderTarget();
 
-				~CRenderTarget();
-
-	bool		Init		( uint nWidth, uint nHeight );
-	PTexture	GetTexture	();
+	bool		Init(uint nWidth, uint nHeight, uint nColorCount, bool bDepth);
+	PTexture	GetTexture(uint nColor);
 	bool		Bind		();
 
-	bool		CopyToVertexBuffer(IVertexBuffer * pDest);
+	bool		CopyToVertexBuffer(IVertexBuffer * pDest, uint nColor);
 
 	private:
 
-		GLuint nFrameBuffer;  // color render target
-		GLuint nDepthBuffer; // depth render target
-		GLuint stencil_rb; // depth render target
+		bool CheckColor(uint nColor);
 
-		CTexture * m_pTexture;
+		GLuint m_nFrameBuffer;  // color render target
+		GLuint m_nDepthBuffer; // depth render target
+		GLuint m_stencil_rb; // depth render target
+
+		#define MAX_MRT_COUNT 4
+		CTexture * m_pColorTexture[MAX_MRT_COUNT];
+		uint m_nColorCount;
 
 		uint m_nListID;
 };
+
+
+CRenderTarget::CRenderTarget()
+	: m_nFrameBuffer(0)
+	, m_nDepthBuffer(0)
+	, m_stencil_rb(0)
+	, m_nColorCount(0)
+{
+
+}
 
 
 /**
@@ -40,22 +54,41 @@ CRenderTarget::~CRenderTarget()
 
 	if ( g_pRenderer->IsExtSupported( EXT_GL_FBO ) )	
 	{
-		glDeleteFramebuffersEXT( 1, &nFrameBuffer );
-		GL_VALIDATE;
+		if (0 != m_nDepthBuffer)
+		{
+			glDeleteFramebuffersEXT(1, &m_nDepthBuffer);
+			GL_VALIDATE;
+		}
 
-		glDeleteFramebuffersEXT( 1, &nDepthBuffer );
+		glDeleteFramebuffersEXT(1, &m_nFrameBuffer);
 		GL_VALIDATE;
 	}
+}
+
+
+bool CRenderTarget::CheckColor(uint nColor)
+{
+	if (nColor < m_nColorCount)
+		return true;
+
+	DEBUG_ASSERT(!"invalid color attachment");
+	return false;
 }
 
 
 /**
 *
 */
-bool CRenderTarget::Init( uint nWidth, uint nHeight )
+bool CRenderTarget::Init( uint nWidth, uint nHeight, uint nColorCount, bool bDepth )
 {
 	if ( false == g_pRenderer->IsExtSupported( EXT_GL_FBO ) )	
 		return false;
+
+	if (nColorCount > MAX_MRT_COUNT)
+	{
+		DEBUG_ASSERT(!"invalid MRT count");
+		return false;
+	}
 	
 	TImage tImage;
 	{
@@ -66,58 +99,62 @@ bool CRenderTarget::Init( uint nWidth, uint nHeight )
 		tImage.pData	= NULL;
 	};
 
-	m_pTexture = g_pRenderer->CreateTexture("frame_buffer");
-	m_pTexture->Init(tImage, EAT_IMMUTABLE);
+	// Color -------------------------------------------------------------------
 
-	glGenFramebuffersEXT( 1, &nFrameBuffer );
+	glGenFramebuffersEXT(1, &m_nFrameBuffer);
 	GL_VALIDATE;
 
-	glGenRenderbuffersEXT( 1, &nDepthBuffer );
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_nFrameBuffer);
 	GL_VALIDATE;
 
-	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, nFrameBuffer );
-	GL_VALIDATE;
+	for (uint i = 0; i < nColorCount; ++i)
+	{
+		m_pColorTexture[i] = g_pRenderer->CreateTexture("frame_buffer");
+		m_pColorTexture[i]->Init(tImage, EAT_IMMUTABLE);
 
-	// Не удобно, но этот hack единственный (?) способ получить
-	// индекс текстуры
+		GLint nTex = m_pColorTexture[i]->GetHandle();
 
-	m_pTexture->Bind();
+		glFramebufferTexture2DEXT(
+			GL_FRAMEBUFFER_EXT,
+			GL_COLOR_ATTACHMENT0_EXT + i,
+			GL_TEXTURE_2D,
+			nTex,
+			0);
+		GL_VALIDATE;
+	}
 
-	GLint nTex;
-	glGetIntegerv( GL_TEXTURE_2D_BINDING_EXT, &nTex );
+	m_nColorCount = nColorCount;
 
-	//////
+	// Depth -------------------------------------------------------------------
 
-	glFramebufferTexture2DEXT(
-		GL_FRAMEBUFFER_EXT,
-		GL_COLOR_ATTACHMENT0_EXT,
-		GL_TEXTURE_2D,
-		nTex,
-		0 );
-	GL_VALIDATE;
+	if (true == bDepth)
+	{
+		glGenRenderbuffersEXT(1, &m_nDepthBuffer);
+		GL_VALIDATE;
 
+		glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, m_nDepthBuffer);
+		GL_VALIDATE;
 
-	// initialize depth renderbuffer
-	glBindRenderbufferEXT( GL_RENDERBUFFER_EXT, nDepthBuffer );
+		// init depth buffer
+		glRenderbufferStorageEXT(
+			GL_RENDERBUFFER_EXT,
+			GL_DEPTH_COMPONENT24,
+			nWidth,
+			nHeight);
+		GL_VALIDATE;
 
-	// init depth buffer
-	glRenderbufferStorageEXT(
-		GL_RENDERBUFFER_EXT,
-		GL_DEPTH_COMPONENT24,
-		nWidth,
-		nHeight );
-	GL_VALIDATE;
+		// attach depth buffer to current framebuffer
+		glFramebufferRenderbufferEXT(
+			GL_FRAMEBUFFER_EXT,
+			GL_DEPTH_ATTACHMENT_EXT,
+			GL_RENDERBUFFER_EXT,
+			m_nDepthBuffer);
+		GL_VALIDATE;
+	}
 
-	// attach depth buffer to current framebuffer
-	glFramebufferRenderbufferEXT(
-		GL_FRAMEBUFFER_EXT,
-		GL_DEPTH_ATTACHMENT_EXT, 
-		GL_RENDERBUFFER_EXT,
-		nDepthBuffer);
-	GL_VALIDATE;
+	// Finalize -----------------------------------------------------------------
 
-	// unbind frame buffer ( set to default )
-	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, 0 );
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 	GL_VALIDATE;
 
 	GLenum eStatus = glCheckFramebufferStatusEXT( GL_FRAMEBUFFER_EXT );
@@ -142,15 +179,18 @@ bool CRenderTarget::Bind()
 
 	//pTexture->Bind(); // ( ??? )
 
-	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, nFrameBuffer );
+	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, m_nFrameBuffer );
 	GL_VALIDATE;
 	return true;
 }
 
 
-bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
+bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest, uint nColor)
 {
-	const TImage & textureDesc = m_pTexture->GetDesc();
+	if (false == CheckColor(nColor))
+		return false;
+
+	const TImage & textureDesc = m_pColorTexture[nColor]->GetDesc();
 	if (textureDesc.nSize != pDest->GetSize())
 	{
 		DEBUG_ASSERT(!"incompatible buffer sizes!");
@@ -160,7 +200,7 @@ bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
 	g_pRenderer->SetRenderTarget(this);
 
 	// set source buffer for reading
-	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
+	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT + nColor);
 
 	glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT, pDest->GetHandle());
 	GL_VALIDATE;
@@ -189,10 +229,15 @@ bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
 /**
 *
 */
-PTexture CRenderTarget::GetTexture()
+PTexture CRenderTarget::GetTexture(uint nColor)
 {
 	PTexture res;
-	res = m_pTexture;
+
+	if (true == CheckColor(nColor))
+	{
+		res = m_pColorTexture[nColor];
+	}
+	
 	return res;
 }
 

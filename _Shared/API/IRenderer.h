@@ -61,6 +61,7 @@ struct ITexture
 	virtual const char *GetName		() const								= 0;
 //	virtual EResult		SetData		( const TImage & tImage )				= 0;
 	virtual EResult		Bind		()										= 0;
+	virtual int			GetHandle() = 0;
 
 	virtual const TImage & GetDesc() =0;
 
@@ -406,12 +407,12 @@ struct IRenderTarget
 {
 	virtual				~IRenderTarget() {}
 
-	virtual bool		Init		( uint nWidth, uint nHeight )	= 0;
-	virtual PTexture	GetTexture	()								= 0;
+	virtual bool		Init(uint nHeight, uint nWidth, uint nColorCuount, bool bDepth ) = 0;
+	virtual PTexture	GetTexture(uint nColor)								= 0;
 	virtual bool		Bind		()								= 0;
 
 	// for GPU tricks
-	virtual	bool		CopyToVertexBuffer(IVertexBuffer * pDest)	= 0;
+	virtual	bool		CopyToVertexBuffer(IVertexBuffer * pDest, uint nColor)	= 0;
 };
 
 

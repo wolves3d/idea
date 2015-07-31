@@ -122,7 +122,7 @@ void CProjectedGrid::Init()
 
 		for (uint x = 0; x < (m_gridWidth-1); ++x)
 		{
-			int nOffset = (nRawStart + x) * 6;
+			uint nOffset = (nRawStart + x) * 6;
 			int nVertexOffset = (m_gridWidth * y) + x;
 
 			if (nOffset >= nIndexCount)
@@ -167,7 +167,7 @@ void CProjectedGrid::Init()
 	m_frameBuffer = g_pRenderer->CreateRenderTarget();
 	m_frameMaterial = g_pEngine->CreateMaterial();
 
-	m_frameBuffer->Init(m_gridWidth, m_gridHeight);
+	m_frameBuffer->Init(m_gridWidth, m_gridHeight, 2, false);
 
 	IShader * waterQuadShader = g_pRenderer->GetShader("WaterQuad");
 	m_frameMaterial->SetShader(waterQuadShader);
@@ -187,7 +187,7 @@ void CProjectedGrid::Init()
 
 PTexture CProjectedGrid::GetFrameTexture()
 {
-	return m_frameBuffer->GetTexture();
+	return m_frameBuffer->GetTexture(0);
 }
 
 
@@ -245,7 +245,7 @@ void CProjectedGrid::Update()
 	Project();
 
 	g_pEngine->DrawFullframeQuad(m_frameBuffer, m_frameMaterial);
-	m_frameBuffer->CopyToVertexBuffer(m_vertexBuffer);
+	m_frameBuffer->CopyToVertexBuffer(m_vertexBuffer, 0);
 	/*
 	//mat4 v = m_pProjector->GetViewProjMatrix();
 	//v.Inverse();

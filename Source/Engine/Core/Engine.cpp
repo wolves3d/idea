@@ -460,7 +460,7 @@ void CEngine::Sprite2D( IMaterial * pMat, const ivec2 & vPos, const ivec2 & vSiz
 
 bool CEngine::DrawFullframeQuad(IRenderTarget * frameBuffer, IMaterial * pMaterial)
 {
-	PTexture frameBufferTex = frameBuffer->GetTexture();
+	PTexture frameBufferTex = frameBuffer->GetTexture(0);
 	const TImage & textureDesc = frameBufferTex->GetDesc();
 
 	ivec2 prevViewport = g_pRenderer->GetViewPort();

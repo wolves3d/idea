@@ -11,24 +11,26 @@ class CTexture : public ITexture
 {
 	friend CRenderer_GL;
 
-	public :
+public:
 
-		CTexture();
-		~CTexture();
+	CTexture();
+	~CTexture();
 
-		void Release();
-		EResult SetRef(PTexture pRefTexture);
-		PTexture GetRef();
-		uint GetRefCount() const;
-		void IncRefCount();
-		void DecRefCount();
+	void Release();
+	EResult SetRef(PTexture pRefTexture);
+	PTexture GetRef();
+	uint GetRefCount() const;
+	void IncRefCount();
+	void DecRefCount();
 
-		EResult Init(const TImage & pImage, EAccessType eAccess);
-		EResult	SetFilter( TextureFormat eFilter );
-		EResult	Bind();
-		const char * GetName() const;
+	EResult Init(const TImage & pImage, EAccessType eAccess);
+	EResult	SetFilter(TextureFormat eFilter);
+	EResult	Bind();
+	const char * GetName() const;
 
-		const TImage & GetDesc();
+	const TImage & GetDesc();
+
+	int GetHandle() { return m_nTextureID; }
 
 	private :
 
