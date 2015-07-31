@@ -302,10 +302,10 @@ void CProjectedGrid::Update()
 	wave += 0.001f;
 
 	m_lookPoint.Set(5 * sinf(0.5f * wave), 0, 5 * cosf(0.5f * wave));
-//	m_lookPoint.Set(5, 0, 0);
+	m_lookPoint.Set(5, 0, 0);
 	m_pCamera->LookAt(m_lookPoint, vec3::vUp);
 
-	m_pProjector2->SetPos(m_pCamera->GetPos() + vec3(0, 2, 0));
+	m_pProjector2->SetPos(m_pCamera->GetPos() + vec3(-20, 20, 0));
 	m_pProjector2->LookAt(m_lookPoint, vec3::vUp);
 }
 

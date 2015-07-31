@@ -36,15 +36,30 @@ vec4 WaterPlane(vec2 UV)
 	return vec4(res.x, res.y, res.z, 1);
 }
 
-float HeightFunc(vec2 UV, float time)
+
+vec4 GrestnerFunc(vec2 UV, vec2 Dir, vec4 params)
 {
-	float WaveLen = 50.0;
-	float Amp = 0.3;
+	float PI = 3.14159265358979323846264;
 	
-	vec3 Dir = vec3(0.0, 1.0, 0.0);
+	float WaveLen = params.x;
+	float Amp = params.y;
+	float Q = params.z;
+	float time = params.w;
 	
-	return (Amp * sin((dot(Dir, UV) * WaveLen) + time));
+	float Freq = (2 * PI) / WaveLen;
+	//vec2 Dir = vec2(1.0, 0.0);
+	
+	float sineArg = ((Freq * dot(Dir, UV)) + time);
+	float C = cos(sineArg);
+	float S = sin(sineArg);
+	
+	return vec4(
+		UV.x + (Q*Amp) * (Dir.x) * C,
+		Amp * S,
+		UV.y + (Q*Amp) * (Dir.y) * C,
+		1);
 }
+
 
 void main(void)
 {
@@ -56,9 +71,15 @@ void main(void)
 	vec2 UV = vec2(fragCoord.x * invRatio, fragCoord.y * invRatio);
 	
 	vec4 waterPos = WaterPlane(UV);
-	//vec2 samplerUV = vec2(0.1 * waterPos.x + fragWaveParams.x * 4, 0.1 * waterPos.z);
-	//waterPos.y += texture2D(DiffuseMap, samplerUV).r;
-	waterPos.y += HeightFunc(0.1 * waterPos.xz, fragWaveParams.x * 25);
+	float time = fragWaveParams.x * 25;	
+	vec4 waveA = GrestnerFunc(waterPos.xz, vec2(0.0, 1.0), vec4(10.0, 0.6, 0.3, time));
+	vec4 waveB = GrestnerFunc(waterPos.xz, normalize(vec2(1.0, 0.0)), vec4(7.0 + 1 * sin(time * 0.3), 0.7, 1.7, time));
+	vec4 waveC = GrestnerFunc(waterPos.xz, normalize(vec2(1.0, 1.0)), vec4(3.0, 0.5, 1.5, time * 0.5));
+	
+	waterPos = (waveA + waveB + waveC) / 3;
+	
+	vec2 samplerUV = vec2(0.1 * waterPos.x - fragWaveParams.x * 4, 0.1 * waterPos.z);
+	waterPos.y += 3 * texture2D(DiffuseMap, samplerUV).r;
 	
 	gl_FragColor = waterPos;
 }
