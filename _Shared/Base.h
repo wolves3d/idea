@@ -114,10 +114,24 @@ struct TImage
 		IMG_FMT_UNKNOWN = INVALID_INDEX,
 		IMG_FMT_RGB8,
 		IMG_FMT_RGBA8,
+		IMG_FMT_RGB32_FLOAT,
 		IMG_FMT_DXT1,
 		IMG_FMT_DXT3,
 		IMG_FMT_DXT5
 	};
+
+	uint GetPixelSize()
+	{
+		switch (eFormat)
+		{
+			case IMG_FMT_RGB8: return 3;
+			case IMG_FMT_RGBA8: return 4;
+			case IMG_FMT_RGB32_FLOAT: return (3 * sizeof(float));
+		}
+
+		DEBUG_ASSERT(!"unknmown img fmt");
+		return 0;
+	}
 
 	uint		nWidth;
 	uint		nHeight;

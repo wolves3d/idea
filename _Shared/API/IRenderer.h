@@ -362,7 +362,8 @@ struct IVertexBuffer
 	virtual void	Render			( IVertexDecl * pDecl, uint nFirst, uint nCount, EPrimitive ePrim ) = 0;
 };
 
-typedef CSafePointer< IVertexBuffer > PVertexBuffer;
+//typedef CSafePointer< IVertexBuffer > PVertexBuffer;
+typedef IVertexBuffer * PVertexBuffer;
 
 enum EAlphaFunc
 {

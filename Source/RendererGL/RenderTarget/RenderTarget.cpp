@@ -61,8 +61,8 @@ bool CRenderTarget::Init( uint nWidth, uint nHeight )
 	{
 		tImage.nWidth	= nWidth;
 		tImage.nHeight	= nHeight;
-		tImage.eFormat	= TImage::IMG_FMT_RGBA8,
-		tImage.nSize	= nWidth * nHeight * 4,
+		tImage.eFormat	= TImage::IMG_FMT_RGB32_FLOAT,
+		//tImage.nSize	= nWidth * nHeight * 4, ησι
 		tImage.pData	= NULL;
 	};
 
@@ -153,7 +153,7 @@ bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
 	const TImage & textureDesc = m_pTexture->GetDesc();
 	if (textureDesc.nSize != pDest->GetSize())
 	{
-		DEBUG_ASSERT("!incompatible buffer sizes!");
+		DEBUG_ASSERT(!"incompatible buffer sizes!");
 		return false;
 	}
 
@@ -163,16 +163,22 @@ bool CRenderTarget::CopyToVertexBuffer(IVertexBuffer * pDest)
 	glReadBuffer(GL_COLOR_ATTACHMENT0_EXT);
 
 	glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT, pDest->GetHandle());
+	GL_VALIDATE;
+
 	glReadPixels(
 		0, 0,
 		textureDesc.nWidth, textureDesc.nHeight,
-		GL_RGBA, GL_FLOAT,
+		GL_RGB, GL_FLOAT,
 		NULL	// destination buffer pointer
 		);
+	GL_VALIDATE;
 
 	// disable buffer for reading
 	glReadBuffer(GL_NONE);
+	GL_VALIDATE;
+
 	glBindBufferARB(GL_PIXEL_PACK_BUFFER_EXT, 0);
+	GL_VALIDATE;
 	
 	g_pRenderer->SetRenderTarget(NULL);
 

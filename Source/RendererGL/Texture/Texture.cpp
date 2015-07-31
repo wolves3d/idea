@@ -78,6 +78,12 @@
 				m_desc.nSize = (m_desc.nWidth * m_desc.nHeight * 4);
 				break;
 
+			case TImage::IMG_FMT_RGB32_FLOAT:
+				nIntFormat = GL_RGB32F_ARB;
+				nFormat = GL_BGR_EXT;
+				m_desc.nSize = (m_desc.nWidth * m_desc.nHeight * m_desc.GetPixelSize());
+				break;
+
 			default:
 
 				glBindTexture( GL_TEXTURE_2D, 0 );
@@ -97,9 +103,9 @@
 				pImage.pData );			// data
 			GL_VALIDATE;
 
-			glTexParameterf	( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-			glTexParameterf	( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-			glBindTexture	( GL_TEXTURE_2D, 0 );
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture( GL_TEXTURE_2D, 0 );
 
 			return R_OK;
 		}
