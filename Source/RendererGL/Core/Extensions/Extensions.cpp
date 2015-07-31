@@ -26,6 +26,8 @@ PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC				glFramebufferRenderbufferEXT			= NULL;
 PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC	glGetFramebufferAttachmentParameterivEXT= NULL;
 PFNGLGENERATEMIPMAPEXTPROC						glGenerateMipmapEXT						= NULL;
 
+PFNGLDRAWBUFFERSARBPROC							glDrawBuffersARB						= NULL;
+
 
 /*
 ================================================================================
@@ -162,6 +164,8 @@ void CRenderer_GL::InitExtensions()
 	glFramebufferRenderbufferEXT			=	(PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC)			wglGetProcAddress( "glFramebufferRenderbufferEXT" );
 	glGetFramebufferAttachmentParameterivEXT=	(PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC)wglGetProcAddress( "glGetFramebufferAttachmentParameterivEXT" );
 	glGenerateMipmapEXT						=	(PFNGLGENERATEMIPMAPEXTPROC)					wglGetProcAddress( "glGenerateMipmapEXT" );
+
+	glDrawBuffersARB = (PFNGLDRAWBUFFERSARBPROC)wglGetProcAddress("glDrawBuffersARB");
 
 	//--------------------------------------------------------------------------
 	// Tip: ARB_vertex_buffer_object

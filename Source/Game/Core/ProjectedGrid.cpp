@@ -185,9 +185,9 @@ void CProjectedGrid::Init()
 }
 
 
-PTexture CProjectedGrid::GetFrameTexture()
+PTexture CProjectedGrid::GetFrameTexture(uint nColor)
 {
-	return m_frameBuffer->GetTexture(0);
+	return m_frameBuffer->GetTexture(nColor);
 }
 
 

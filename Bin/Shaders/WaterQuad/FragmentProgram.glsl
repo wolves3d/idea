@@ -81,5 +81,6 @@ void main(void)
 	vec2 samplerUV = vec2(0.1 * waterPos.x - fragWaveParams.x * 4, 0.1 * waterPos.z);
 	waterPos.y += 3 * texture2D(DiffuseMap, samplerUV).r;
 	
-	gl_FragColor = waterPos;
+	gl_FragData[0] = waterPos;
+	gl_FragData[1] = normalize(waterPos) * (-1);
 }

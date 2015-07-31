@@ -22,6 +22,9 @@ extern PFNGLFRAMEBUFFERRENDERBUFFEREXTPROC				glFramebufferRenderbufferEXT;
 extern PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVEXTPROC	glGetFramebufferAttachmentParameterivEXT;
 extern PFNGLGENERATEMIPMAPEXTPROC						glGenerateMipmapEXT;
 
+// GL_ARB_draw_buffers
+extern PFNGLDRAWBUFFERSARBPROC							glDrawBuffersARB;
+
 /*
 ================================================================================
 //	Name: ARB_vertex_buffer_object

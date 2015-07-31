@@ -255,13 +255,10 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 
 	CProjectedGrid grid;
 
-	//PTexture pBackTex;
+	PTexture rtTexture = grid.GetFrameTexture(0);
+	const TImage & texDesc = rtTexture->GetDesc();
 	IMaterial * pRTM = g_pEngine->CreateMaterial();
 	pRTM->SetShader(g_pRenderer->GetShader(UI_SHADER));
-	ISprite2D * spriteRT = NULL;
-	
-	PTexture rtTexture = grid.GetFrameTexture();
-	const TImage & texDesc = rtTexture->GetDesc();
 	pRTM->SetTexture(DIFFUSE_MAP, rtTexture);
 	pRTM->EnableDepthTest( false );
 	pRTM->EnableDepthWrite( false );
@@ -270,11 +267,26 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 	uColorMod.Connect( pRTM );
 	uColorMod.SetValue( &vec4( 1, 1, 1, 1 ), 1 );
 
-	spriteRT = g_pUIManager->CreateSprite();
+	ISprite2D * spriteRT = g_pUIManager->CreateSprite();
 	spriteRT->SetPos(0, 0);
-	
-	spriteRT->SetSize(texDesc.nWidth, texDesc.nHeight);
+	spriteRT->SetSize(0.5f * texDesc.nWidth, 0.5f * texDesc.nHeight);
 	spriteRT->SetMaterial(pRTM);
+
+	PTexture rtTexture2 = grid.GetFrameTexture(1);
+	IMaterial * pRTM2 = g_pEngine->CreateMaterial();
+	pRTM2->SetShader(g_pRenderer->GetShader(UI_SHADER));
+	pRTM2->SetTexture(DIFFUSE_MAP, rtTexture2);
+	pRTM2->EnableDepthTest(false);
+	pRTM2->EnableDepthWrite(false);
+
+	CUniform uColorMod2("vColorMod", pRTM2->GetShader());
+	uColorMod2.Connect(pRTM2);
+	uColorMod2.SetValue(&vec4(1, 1, 1, 1), 1);
+
+	ISprite2D * spriteRT2 = g_pUIManager->CreateSprite();
+	spriteRT2->SetPos(0, 0.5f * texDesc.nHeight);
+	spriteRT2->SetSize(0.5f * texDesc.nWidth, 0.5f * texDesc.nHeight);
+	spriteRT2->SetMaterial(pRTM2);
 
 	////////////////////////////////////////////////////////////////////////
 
@@ -353,6 +365,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 			grid.Render();
 
 			g_pUIManager->PushSprite(spriteRT);
+			g_pUIManager->PushSprite(spriteRT2);
 
 			g_pEngine->Update();
 

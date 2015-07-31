@@ -32,6 +32,17 @@ public:
 		uint m_nColorCount;
 
 		uint m_nListID;
+
+		static const GLenum s_drawBuffers[];
+};
+
+
+const GLenum CRenderTarget::s_drawBuffers[] =
+{
+	GL_COLOR_ATTACHMENT0_EXT,
+	GL_COLOR_ATTACHMENT1_EXT,
+	GL_COLOR_ATTACHMENT2_EXT,
+	GL_COLOR_ATTACHMENT3_EXT,
 };
 
 
@@ -181,6 +192,10 @@ bool CRenderTarget::Bind()
 
 	glBindFramebufferEXT( GL_FRAMEBUFFER_EXT, m_nFrameBuffer );
 	GL_VALIDATE;
+
+	glDrawBuffersARB(m_nColorCount, s_drawBuffers);
+	GL_VALIDATE;
+
 	return true;
 }
 
@@ -285,6 +300,9 @@ bool CRenderer_GL::SetRenderTarget( IRenderTarget * pRT )
 	{
 		// NULL means default render target (frame buffer)
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		GL_VALIDATE;
+
+		glDrawBuffer(GL_BACK);
 		GL_VALIDATE;
 	}
 	else

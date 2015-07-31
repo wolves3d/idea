@@ -14,7 +14,7 @@ class CProjectedGrid
 		void Release();
 		void Render();
 
-		PTexture GetFrameTexture();
+		PTexture GetFrameTexture(uint nColor);
 
 	private:
 
