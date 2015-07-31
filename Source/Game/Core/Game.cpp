@@ -253,62 +253,37 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 
 	////////////////////////////////////////////////////////////////////////
 
+	CProjectedGrid grid;
+
+	//PTexture pBackTex;
 	IMaterial * pRTM = g_pEngine->CreateMaterial();
-	IMaterial * pFrameShader = g_pEngine->CreateMaterial();
+	pRTM->SetShader(g_pRenderer->GetShader(UI_SHADER));
 	ISprite2D * spriteRT = NULL;
-	ivec2 rtSize(256, 256);
-	IRenderTarget * pRT = g_pRenderer->CreateRenderTarget();
-
 	
-	PTexture pBackTex;
+	PTexture rtTexture = grid.GetFrameTexture();
+	const TImage & texDesc = rtTexture->GetDesc();
+	pRTM->SetTexture(DIFFUSE_MAP, rtTexture);
+	pRTM->EnableDepthTest( false );
+	pRTM->EnableDepthWrite( false );
 
-	if (NULL != pRT)
-	{
-		pRT->Init(rtSize.x, rtSize.y);
-		pRTM->SetShader( g_pRenderer->GetShader( UI_SHADER ) );
-		
-		pFrameShader->SetShader(g_pRenderer->GetShader("WaterQuad"));
-		//pFrameShader->SetTexture(DIFFUSE_MAP, g_pRenderer->GetSysTexture(EST_WHITE));
-		pFrameShader->SetTexture(DIFFUSE_MAP, pTex);
-		pFrameShader->EnableDepthTest(false);
+	CUniform uColorMod( "vColorMod", pRTM->GetShader() );
+	uColorMod.Connect( pRTM );
+	uColorMod.SetValue( &vec4( 1, 1, 1, 1 ), 1 );
 
-// 		CUniform ccc("vColorMod", pFrameShader->GetShader());
-// 		ccc.Connect(pFrameShader);
-// 		ccc.SetValue(&vec4(1, 1, 1, 1), 1);
-
-
-
-		PTexture rtTexture = pRT->GetTexture();
-		pRTM->SetTexture(DIFFUSE_MAP, rtTexture);
-		//pRTM->EnableAlphaTest( true );
-		//pRTM->EnableAlphaBlend( true );
-		//pRTM->BlendFunc( BF_SRC_ALPHA, BF_ONE );
-
-		pRTM->EnableDepthTest( false );
-		pRTM->EnableDepthWrite( false );
-
-		CUniform uColorMod( "vColorMod", pRTM->GetShader() );
-		uColorMod.Connect( pRTM );
-		uColorMod.SetValue( &vec4( 1, 1, 1, 1 ), 1 );
-
-
-
-		spriteRT = g_pUIManager->CreateSprite();
-		spriteRT->SetPos(0, 0);
-		spriteRT->SetSize(rtSize.x, rtSize.y);
-		spriteRT->SetMaterial(pRTM);
-	}
+	spriteRT = g_pUIManager->CreateSprite();
+	spriteRT->SetPos(0, 0);
+	
+	spriteRT->SetSize(texDesc.nWidth, texDesc.nHeight);
+	spriteRT->SetMaterial(pRTM);
 
 	////////////////////////////////////////////////////////////////////////
-
-	CProjectedGrid grid;
 
 	SysWrite( "Enetring main loop" );
 	SysWrite( "--------------------------------------------------------------------------------" );
 
 	while ( pWin->Idle() )
 	{
-		g_pEngine->DrawFullframeQuad(pRT, pFrameShader);
+
 		//pFrameShader->Assign();
 		//pRT->DrawFullframeQuad();
 		/*
@@ -409,7 +384,6 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 	RELEASE( pEnt2 );
 
 	RELEASE( pRTM );
-	DEL( pRT );
 	RELEASE( pParticleMat );
 	DEL( pEmitter );
 	DEL( g_pLandscape );

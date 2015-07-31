@@ -14,16 +14,20 @@ class CProjectedGrid
 		void Release();
 		void Render();
 
+		PTexture GetFrameTexture();
+
 	private:
 
 		struct GridVertex
 		{
 			vec3 vPos;
+			/*
 			vec2 vTex;
 
 			vec3 vTangent;
 			vec3 vBitangent;
 			vec3 vNormal;
+			*/
 		};
 
 		void Update();
@@ -35,8 +39,11 @@ class CProjectedGrid
 		uint m_gridHeight;
 		uint m_gridVertexCount;
 
+		IRenderTarget * m_frameBuffer;
+		IMaterial * m_frameMaterial;
+
 		IVertexDecl * m_vertexDecl;
-		PVertexBuffer m_vertexBuffer;
+		IVertexBuffer * m_vertexBuffer;
 		IIndexBuffer * m_indexBuffer;
 		IMaterial * m_Material;
 
@@ -45,6 +52,7 @@ class CProjectedGrid
 		CUniform m_lightPos;
 		CUniform m_eyePos;
 		CUniform m_waveParams;
+		CUniform m_uniformIVP;
 
 		ICamera * m_pCamera;
 		ICamera * m_pProjector2;
