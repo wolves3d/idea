@@ -52,4 +52,6 @@ void main(void)
 	
 	
 	// color = ( tex2D( dif_1 ) * inf_1 ) + ( tex2D( dif_2 ) * inf_2 );
+	
+	gl_FragColor = vec4(1, 1, 1, 1);
 }
