@@ -45,7 +45,7 @@
 		<vPos Type="vec2" D3D_Semantic="POSITION"/>
 		<vTex0 Type="vec2" D3D_Semantic="TEXCOORD"/>
 	</VertexFormat>
-	<Constants waveParams="vec4" invViewProj="mat4"/>
+	<Constants setup="vec4" waveDirs="vec4 [4]" waveParams="vec4 [4]" invViewProj="mat4"/>	
 	<Maps Diffuse="tex2d"/>
    </WaterQuad>
    <Line ProgramPath="Shaders/Line">

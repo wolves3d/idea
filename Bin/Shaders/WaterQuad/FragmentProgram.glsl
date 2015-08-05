@@ -1,9 +1,12 @@
 uniform sampler2D DiffuseMap;
 
-in vec2 fragTexCoord;
-in vec4 fragWaveParams;
-in mat4 fragIVP;
+in vec4 fragWaveSetup;
+in vec4 fragWaveDirs[4];
+in vec4 fragWaveParams[4];
 
+in vec2 fragTexCoord;
+//in vec4 fragWaveParams;
+in mat4 fragIVP;
 
 vec3 PlaneCollision(vec3 vStart, vec3 vEnd)
 {
@@ -37,27 +40,85 @@ vec4 WaterPlane(vec2 UV)
 }
 
 
-vec4 GrestnerFunc(vec2 UV, vec2 Dir, vec4 params)
+struct WaveVertex
 {
-	float PI = 3.14159265358979323846264;
+	vec3 pos;
+	vec3 normal;
+	vec3 tangent;
+};
+
+
+WaveVertex GerstnerFunc(vec2 UV, int waveCount)
+{
+	float PI = 3.14159265358979323846264;	
 	
-	float WaveLen = params.x;
-	float Amp = params.y;
-	float Q = params.z;
-	float time = params.w;
+	WaveVertex res;
+	res.pos = vec3(UV.x, 0.0, UV.y);
+
+	for (int i = 0; i < waveCount; ++i)
+	{
+		vec2 Dir = normalize(fragWaveDirs[i].xy);
+		float WaveLen = fragWaveParams[i].x;
+		float Amp = fragWaveParams[i].y;
+		float Q = fragWaveParams[i].z;
+		float time = fragWaveParams[i].w;
+
+		float Freq = (2 * PI) / WaveLen;
+		float sineArg = ((Freq * dot(Dir, UV)) + time);
+		float C = cos(sineArg);
+		float S = sin(sineArg);
 	
-	float Freq = (2 * PI) / WaveLen;
-	//vec2 Dir = vec2(1.0, 0.0);
+		res.pos += vec3(
+			(Q*Amp) * (Dir.x) * C,
+			Amp * S,
+			(Q*Amp) * (Dir.y) * C);
+	}
+
+	vec2 P = vec2(res.pos.xz);
 	
-	float sineArg = ((Freq * dot(Dir, UV)) + time);
-	float C = cos(sineArg);
-	float S = sin(sineArg);
+	// normal
 	
-	return vec4(
-		UV.x + (Q*Amp) * (Dir.x) * C,
-		Amp * S,
-		UV.y + (Q*Amp) * (Dir.y) * C,
-		1);
+	res.normal = vec3(0, 1, 0);
+	for (int i = 0; i < waveCount; ++i)
+	{	
+		vec2 Dir = normalize(fragWaveDirs[i].xy);
+		float WaveLen = fragWaveParams[i].x;
+		float Amp = fragWaveParams[i].y;
+		float Q = fragWaveParams[i].z;
+		float time = fragWaveParams[i].w;
+		
+		float Freq = (2 * PI) / WaveLen;
+		float WA = (Freq * Amp);
+		
+		res.normal -= vec3(
+			Dir.x * WA * cos(Freq * dot(Dir, P) + time),
+			Q * WA * sin(Freq * dot(Dir, P) + time),
+			Dir.y * WA * cos(Freq * dot(Dir, P) + time));
+	}
+	
+	// tangent
+	
+	res.tangent = vec3(0, 0, 0);
+	for (int i = 0; i < waveCount; ++i)
+	{	
+		vec2 Dir = normalize(fragWaveDirs[i].xy);
+		float WaveLen = fragWaveParams[i].x;
+		float Amp = fragWaveParams[i].y;
+		float Q = fragWaveParams[i].z;
+		float time = fragWaveParams[i].w;
+		
+		float Freq = (2 * PI) / WaveLen;
+		float WA = (Freq * Amp);
+		
+		res.tangent += vec3(
+			-Q * (Dir.x * Dir.y) * WA * sin(Freq * dot(Dir, P) + time),
+			Dir.y * WA * cos(Freq * dot(Dir, P) + time),
+			-Q * (Dir.y * Dir.y) * WA * sin(Freq * dot(Dir, P) + time));
+	}
+	
+	res.tangent.z = (1 - res.tangent.z);
+	
+	return res;
 }
 
 
@@ -71,16 +132,19 @@ void main(void)
 	vec2 UV = vec2(fragCoord.x * invRatio, fragCoord.y * invRatio);
 	
 	vec4 waterPos = WaterPlane(UV);
-	float time = fragWaveParams.x * 25;	
-	vec4 waveA = GrestnerFunc(waterPos.xz, vec2(0.0, 1.0), vec4(10.0, 0.6, 0.3, time));
-	vec4 waveB = GrestnerFunc(waterPos.xz, normalize(vec2(1.0, 0.0)), vec4(7.0 + 1 * sin(time * 0.3), 0.7, 1.7, time));
-	vec4 waveC = GrestnerFunc(waterPos.xz, normalize(vec2(1.0, 1.0)), vec4(3.0, 0.5, 1.5, time * 0.5));
+	float time = fragWaveParams[0].w * 25;	
 	
-	waterPos = (waveA + waveB + waveC) / 3;
 	
-	vec2 samplerUV = vec2(0.1 * waterPos.x - fragWaveParams.x * 4, 0.1 * waterPos.z);
-	waterPos.y += 3 * texture2D(DiffuseMap, samplerUV).r;
+	int waveCount = (int)fragWaveSetup.x;	
+	WaveVertex t = GerstnerFunc(waterPos.xz, waveCount);
+
+//	float r = 0.05;
+//	vec2 samplerUV = vec2(r * waterPos.x - (fragWaveParams[0].w * 0.3), r * waterPos.z);
+//	t.pos.y += texture2D(DiffuseMap, samplerUV).r;
 	
-	gl_FragData[0] = waterPos;
-	gl_FragData[1] = normalize(waterPos) * (-1);
+	
+	//gl_FragData[0] = vec4((a.pos + b.pos + c.pos) / 3, 1);
+	gl_FragData[0] = vec4(t.pos, 1);
+	gl_FragData[1] = vec4(t.normal, 1);
+	gl_FragData[2] = vec4(t.tangent, 1);
 }

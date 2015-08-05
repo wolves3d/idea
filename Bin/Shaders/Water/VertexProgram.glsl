@@ -6,10 +6,10 @@ uniform		vec4	eyePos;
 uniform		vec4	waveParams;
 
 attribute	vec3 	vPos;
-attribute	vec2 	vTex0;
-attribute	vec3 	vTangent;
-attribute	vec3 	vBitangent;
 attribute	vec3 	vNormal;
+//attribute	vec2 	vTex0;
+attribute	vec3 	vTangent;
+//attribute	vec3 	vBitangent;
 
 varying		vec2	texCoord;
 //varying		vec4	colorMod;
@@ -24,44 +24,47 @@ varying	vec3 fragNormal;
 
 void main()
 {
+	fragPosition = modelView * vec4(vPos, 1);
+	vec2 vTex0 = vPos.xz * 0.09;
 	texCoord		= vec2(vTex0.x + waveParams.x, vTex0.y);
 	
-	fragPosition = modelView * vec4(vPos, 1);
 	
-	fragLightPosition = (modelView * vLightPos).xyz;
-	
+//	fragLightPosition = (modelView * vLightPos).xyz;
 	//fragEyePosition = (modelView * eyePos).xyz;
 	
 	fragEyePosition = (eyePos).xyz;
 	
-	mat3 normalMatrix = mat3(modelView);
+	mat3 normalMatrix = inverse(transpose(mat3(modelView)));
+	//mat3 normalMatrix = mat3(modelView);
 	
-			//normalMatrix = inverse(transpose(normalMatrix));
-			//normalMatrix = inverse(transpose(normalMatrix));
+			//vec3 bitangent = normalize(cross(vNormal, vTangent));
+			vec3 bitangent = normalize(cross(vTangent, vNormal));
 	
-			vec3 vertexTangent = normalMatrix * vTangent;
-			vec3 vertexBitangent = normalMatrix * vBitangent;
 			vec3 vertexNormal = normalMatrix * vNormal;
+			vec3 vertexTangent = normalMatrix * vTangent;
+			vec3 vertexBitangent = normalMatrix * bitangent;
 			
-			mat3 TBN = transpose(mat3(
-				vertexTangent,
-				vertexBitangent,
-				vertexNormal
+			mat3 invTBN = transpose(mat3(
+				normalize(vertexTangent),
+				normalize(vertexBitangent),
+				normalize(vertexNormal)
 			));
-			
-			//fragNormal = vertexNormal;
 	
 			vec3 vertexPos_cameraspace = (modelView * vec4(vPos, 1)).xyz;
 			fragEyePosition = vec3(0,0,0) - vertexPos_cameraspace;
 			
 			vec3 LightPosition_cameraspace = (modelView * vLightPos).xyz;
-			vec3 LightDir_cameraspace = LightPosition_cameraspace - vertexPos_cameraspace;
-			
-			fragLightPosition = TBN * LightDir_cameraspace;	
-			//fragLightPosition = TBN * LightDir_cameraspace;
+			vec3 LightDir_cameraspace = (LightPosition_cameraspace - vertexPos_cameraspace);
+			fragLightPosition = invTBN * LightDir_cameraspace;	
+			fragEyePosition = invTBN * fragEyePosition;
 	
 	//fragNormal = normalMatrix * vNormal;	
 	//fragNormal = TBN * vNormal;
+	//fragNormal = vec3(0,0,1);
+	//fragNormal = vNormal;
+	
+	//fragNormal = (inverse(transpose(modelView)) * vec4(vNormal.xyz, 1)).xyz;
+	
 	
 	gl_Position		= mMVP * vec4( vPos, 1);
 	//gl_FrontColor	= vec4( 1, dot(vL, vNormal), 1, 1 );
