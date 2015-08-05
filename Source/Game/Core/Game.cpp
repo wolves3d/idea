@@ -269,7 +269,7 @@ int WINAPI WinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int n
 
 	ISprite2D * spriteRT = g_pUIManager->CreateSprite();
 	spriteRT->SetPos(0, 0);
-	spriteRT->SetSize(0.5f * texDesc.nWidth, 0.5f * texDesc.nHeight);
+	spriteRT->SetSize(0.5f * texDesc.nWidth, 0.5 * texDesc.nHeight);
 	spriteRT->SetMaterial(pRTM);
 
 	PTexture rtTexture2 = grid.GetFrameTexture(1);
