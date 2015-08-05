@@ -352,7 +352,10 @@ struct IVertexBuffer
 	virtual bool	Alloc			( uint nSize, dword dwFlags ) = 0;
 	virtual bool	Free			() = 0;
 
-	virtual void *	Lock			( size_t nOffset, size_t nSize, bool bReadBack = false ) = 0;
+	virtual bool	AllocMulti		( uint nCount ) = 0;
+	virtual IVertexBuffer * GetSubBuffer(uint nID) = 0;
+
+	virtual void *	Lock			(size_t nOffset, size_t nSize, bool bReadBack = false ) = 0;
 	virtual void	Unlock			() = 0;
 	virtual EResult UpdateData		( size_t nOffset, void * pData, size_t nSize ) = 0;
 

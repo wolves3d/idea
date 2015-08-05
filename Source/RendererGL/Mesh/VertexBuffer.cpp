@@ -28,6 +28,9 @@ class CVertexBuffer : public IVertexBuffer
 	bool	Free			();
 	void	Release			();
 
+	bool	AllocMulti(uint nCount) ;
+	IVertexBuffer * GetSubBuffer(uint nID);
+
 	void *	Lock			( size_t nOffset, size_t nSize, bool bReadBack = false );
 	void	Unlock			();
 	EResult UpdateData		( size_t nOffset, void * pData, size_t nSize );
@@ -45,6 +48,9 @@ class CVertexBuffer : public IVertexBuffer
 
 	void BindVertexDecl( IVertexDecl * pDecl );
 
+	bool		m_isMultiSub;
+	IVertexBuffer ** m_ppSubBuffers;
+
 	size_t		m_nSize;
 	uint		m_nIndex;			// Индекс в списке всех VB
 	bool 		m_bLocked;
@@ -60,9 +66,11 @@ class CVertexBuffer : public IVertexBuffer
 /**
 *
 */
-CVertexBuffer::CVertexBuffer() :
-	m_nSize			( 0		),
-	m_bLocked		( false	)
+CVertexBuffer::CVertexBuffer()
+	: m_nSize(0)
+	, m_bLocked(false)
+	, m_isMultiSub(false)
+	, m_ppSubBuffers(NULL)
 {
 	m_nBufferID		= 0;
 	m_pMemBuffer	= NULL;
@@ -74,8 +82,8 @@ CVertexBuffer::CVertexBuffer() :
 */
 CVertexBuffer::~CVertexBuffer()
 {
-	g_pRenderer->RemoveVB( m_nIndex );
 	Free();
+	g_pRenderer->RemoveVB( m_nIndex );
 }
 
 
@@ -85,6 +93,37 @@ CVertexBuffer::~CVertexBuffer()
 void CVertexBuffer::Release()
 {
 	PURE_DEL( this );
+}
+
+
+bool CVertexBuffer::AllocMulti(uint nCount)
+{
+	m_isMultiSub = true;
+	m_nSize = nCount;
+
+	m_ppSubBuffers = new PVertexBuffer [nCount];
+
+	for (uint i = 0; i < nCount; ++i)
+	{
+		m_ppSubBuffers[i] = g_pRenderer->CreateVB();
+	}
+
+	return true;
+}
+
+
+IVertexBuffer * CVertexBuffer::GetSubBuffer(uint nID)
+{
+	if (true == m_isMultiSub)
+	{
+		if (nID < m_nSize)
+		{
+			return m_ppSubBuffers[nID];
+		}
+	}
+
+	DEBUG_ASSERT(!"invalid op");
+	return NULL;
 }
 
 
@@ -170,6 +209,19 @@ bool CVertexBuffer::Alloc( uint nSize, dword dwFlags )
 */
 bool CVertexBuffer::Free()
 {
+	if (true == m_isMultiSub)
+	{
+		for (uint i = 0; i < m_nSize; ++i)
+		{
+			IVertexBuffer * subBuffer = GetSubBuffer(i);
+			subBuffer->Release();
+		}
+
+		DEL_ARRAY(m_ppSubBuffers);
+		m_nSize = 0;
+		return true;
+	}
+
 	//--------------------------------------------------------------------------
 	// Tip: Выходим, если буффер залочен
 	//--------------------------------------------------------------------------
@@ -335,64 +387,50 @@ void CVertexBuffer::BindVertexDecl( IVertexDecl * pDecl )
 	if ( NULL == pDecl )
 		return;
 
-	byte * pOffset = g_pRenderer->IsExtSupported( EXT_GL_VBO ) ? NULL : (byte *)m_pMemBuffer;
+	byte * pOffset = NULL;
 
-	for ( uint n = 0; n < pDecl->GetAttrCount(); ++n )
+	for (uint n = 0; n < pDecl->GetAttrCount(); ++n)
 	{
 		const TVertexAttr *	pAttr = pDecl->GetAttr( n );
-		//const TAttr & tAttr = m_pAttrs[ n ];
+		
+		// for debug
+		int a = glGetAttribLocationARB(g_pRenderer->GetCurrentProgram(), pAttr->szName);
 
-		//if ( INVALID_INDEX != tAttr.nLoc )
 		{
-			//if ( bAssign )
+			uint bufferID = m_nBufferID;
+			uint stride = (GLsizei)pDecl->GetStride();
+			uint offset = pAttr->nOffset;
+
+			if (m_isMultiSub)
 			{
-			/*	
-				if ( n == 0 )
+				if (n < m_nSize)
 				{
-					glEnableClientState( GL_VERTEX_ARRAY );
-
-					glVertexPointer(
-						GetElementCount( pAttr->eType ), //tAttr.nElemCount,
-						GL_FLOAT, //tAttr.eType,
-						(GLsizei)pDecl->GetStride(),
-						pOffset + pAttr->nOffset );
-
-					continue;
-				}
-				else if ( n == 1 )
-				{
-					glEnableClientState( GL_TEXTURE_COORD_ARRAY );
-					GL_VALIDATE;
-
-					glTexCoordPointer(
-						GetElementCount( pAttr->eType ), //tAttr.nElemCount,
-						GL_FLOAT, //tAttr.eType,
-						(GLsizei)pDecl->GetStride(),
-						pOffset + pAttr->nOffset );
-					GL_VALIDATE;
+					bufferID = GetSubBuffer(n)->GetHandle();
+					stride = 0;
+					offset = 0;
 				}
 				else
-				*/
-
-				//if ( g_pRenderer->IsExtSupported( EXT_GL_VRTX_PROGRAM ) )
 				{
-					//if ( 1 != n )
-					{
-						int a = glGetAttribLocationARB( g_pRenderer->GetCurrentProgram(), pAttr->szName );
-
-						glVertexAttribPointerARB(
-							n, //tAttr.nLoc,
-							g_pElemCountGL[ pAttr->eType ],								// element count
-							GL_FLOAT, //tAttr.eType,										// element type
-							GL_FALSE, //( tAttr.eType == GL_FLOAT ) ? GL_FALSE : GL_TRUE,	// need normalize int numbers?
-							(GLsizei)pDecl->GetStride(),						// stride
-							pOffset + pAttr->nOffset );					// offset
-						GL_VALIDATE;
-
-						glEnableVertexAttribArrayARB( n /* tAttr.nLoc */ );
-						GL_VALIDATE;
-					}
+					bufferID = 0;
 				}
+			}
+
+			if (0 != bufferID)
+			{
+				glBindBufferARB(GL_ARRAY_BUFFER_ARB, bufferID);
+				GL_VALIDATE;
+
+				glVertexAttribPointerARB(
+					n, //tAttr.nLoc,
+					g_pElemCountGL[pAttr->eType],								// element count
+					GL_FLOAT, //tAttr.eType,										// element type
+					GL_FALSE, //( tAttr.eType == GL_FLOAT ) ? GL_FALSE : GL_TRUE,	// need normalize int numbers?
+					stride,								// stride
+					pOffset + offset);					// offset
+				GL_VALIDATE;
+
+				glEnableVertexAttribArrayARB(n /* tAttr.nLoc */);
+				GL_VALIDATE;
 			}
 		}
 	}
@@ -423,11 +461,13 @@ void CVertexBuffer::Render( IVertexDecl * pDecl, uint nFirst, uint nCount, EPrim
 	//--------------------------------------------------------------------------
 	// Tip: Bind VBO object
 	//--------------------------------------------------------------------------
+	/*
 	if ( g_pRenderer->IsExtSupported( EXT_GL_VBO ) )
 	{
 		glBindBufferARB( GL_ARRAY_BUFFER_ARB, m_nBufferID );
 		GL_VALIDATE;
 	}
+	*/
 
 	// assign vertex declaration
 	BindVertexDecl( pDecl );
@@ -488,13 +528,6 @@ void CVertexBuffer::RenderIndexed( IVertexDecl * pDecl, IIndexBuffer * pIB, EPri
 	//--------------------------------------------------------------------------
 	// Tip: Bind VBO object
 	//--------------------------------------------------------------------------
-	if ( g_pRenderer->IsExtSupported( EXT_GL_VBO ) )
-	{
-		glBindBufferARB( GL_ARRAY_BUFFER_ARB, m_nBufferID );
-		GL_VALIDATE;
-	}
-
-	// assign vertex declaration
 	BindVertexDecl( pDecl );
 
 	// assgin index buffer
