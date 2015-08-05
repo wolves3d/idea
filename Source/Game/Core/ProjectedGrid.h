@@ -43,7 +43,7 @@ class CProjectedGrid
 		IMaterial * m_frameMaterial;
 
 		IVertexDecl * m_vertexDecl;
-		IVertexBuffer * m_vertexBuffer;
+		IVertexBuffer * m_VAO;
 		IIndexBuffer * m_indexBuffer;
 		IMaterial * m_Material;
 
@@ -51,8 +51,12 @@ class CProjectedGrid
 		CUniform m_uniformModelViewMatrix;
 		CUniform m_lightPos;
 		CUniform m_eyePos;
-		CUniform m_waveParams;
 		CUniform m_uniformIVP;
+		CUniform m_shift;
+
+		CUniform m_waveSetup;
+		CUniform m_waveDirs;
+		CUniform m_waveParams;
 
 		ICamera * m_pCamera;
 		ICamera * m_pProjector2;

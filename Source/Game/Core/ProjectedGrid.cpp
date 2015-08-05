@@ -4,7 +4,7 @@
 
 CProjectedGrid::CProjectedGrid()
 	: m_vertexDecl(NULL)
-	, m_vertexBuffer(NULL)
+	, m_VAO(NULL)
 	, m_indexBuffer(NULL)
 	, m_Material(NULL)
 	, m_pCamera(NULL)
@@ -30,15 +30,175 @@ void CProjectedGrid::Release()
 	DEL(m_frameBuffer);
 	DEL(m_vertexDecl);
 
-	RELEASE(m_vertexBuffer);
+	RELEASE(m_VAO);
 	RELEASE(m_indexBuffer);
 	RELEASE(m_Material);
 	RELEASE(m_frameMaterial);
 }
 
 
+// =============================================================================
+
+struct KnapsackSolver
+{
+	KnapsackSolver(int packCapacity, int itemCount)
+	{
+		N = itemCount;
+		W = packCapacity;
+
+		pItems = new PackItem[itemCount];
+		A = new int[N * W];
+	}
+
+	void SetItem(uint id, int weight, int price)
+	{
+ 		pItems[id].weight = weight;
+ 		pItems[id].price = price;
+	}
+
+	void Dump()
+	{
+		for (int i = 0; i < N; ++i)
+		{
+			char buff[1024];
+			buff[0] = 0;
+
+			for (int j = 0; j < W; ++j)
+			{
+				sprintf(buff + strlen(buff), "\t%d", GetA(i, j));
+			}
+
+			SysWrite(Va("A %s", buff));
+		}
+	}
+
+	void Solve()
+	{
+		for (int i = 0; i < W; ++i)
+			SetA(0, i, 0);
+		
+ 		for (int i = 0; i < N; ++i)
+ 			SetA(i, 0, 0);
+
+		for (int k = 1; k < N; ++k)
+		{
+			for (int s = 1; s < W; ++s)
+//			for (int s = 0; s < W; ++s)
+			{
+				int weight = pItems[k].weight;
+				int price = pItems[k].price;
+				/*
+				if (s < (weight - 1))
+				{
+					SetA(k, s, GetA(k - 1, s));
+				}
+				else
+				{
+					SetA(k, s, max(
+						GetA(k - 1, s),
+						GetA(k - 1, s - weight) + weight));
+				}
+				*/
+				
+				if (s >= weight)
+				{
+					SetA(k, s, max(
+						GetA(k - 1, s),
+						GetA(k - 1, s - weight) + price));
+				}
+				else
+				{
+					SetA(k, s, GetA(k - 1, s));
+				}
+				
+			}
+		}
+
+		Dump();
+
+		result.clear();
+		FindAns(N-1, W-1);
+
+		result.clear();
+	}
+
+	void FindAns(int k, int s)
+	{
+		if (0 == GetA(k, s))
+			return;
+
+		if (GetA(k, s) == GetA(k - 1, s))
+		{
+			FindAns(k - 1, s);
+		}
+		else
+		{
+			FindAns(k - 1, s - pItems[k].weight);
+			result.push_back(k);
+		}
+	}
+
+	void SetA(int i, int w, int value)
+	{
+		//int id = (w * N) + i;
+		int id = (i * W) + w;
+		A[id] = value;
+	}
+
+	int GetA(int i, int w)
+	{
+		//int id = (w * N) + i;
+		int id = (i * W) + w;
+		return A[id];
+	}
+
+	struct PackItem
+	{
+		int weight;
+		int price;
+	} * pItems;
+
+	int N;
+	int W;
+	int * A;
+	std::vector <int> result;
+};
+
+
+void BalanceTest()
+{
+//	KnapsackSolver pack(9+1, 6);
+// 	pack.SetItem(0, 5, 5);
+// 	pack.SetItem(1, 5, 5);
+// 	pack.SetItem(2, 3, 3);
+// 	pack.SetItem(3, 2, 2);
+// 	pack.SetItem(4, 2, 2);
+// 	pack.SetItem(5, 1, 1);
+
+	KnapsackSolver pack(25 + 1, 6);
+	pack.SetItem(0, 9, 9);
+	pack.SetItem(1, 9, 9);
+	pack.SetItem(2, 9, 9);
+	pack.SetItem(3, 8, 8);
+	pack.SetItem(4, 8, 8);
+	pack.SetItem(5, 7, 7);
+
+	pack.Solve();
+
+	int stop = 0;
+}
+
+// =============================================================================
+
+
 void CProjectedGrid::Init()
 {
+	int a = sizeof(int);
+	int b = sizeof(long);
+	int c = sizeof(void *);
+
+	BalanceTest();
+
 	m_gridVertexCount = (m_gridWidth * m_gridHeight);
 
 	m_vertexDecl = g_pRenderer->CreateVertexDecl();
@@ -50,14 +210,15 @@ void CProjectedGrid::Init()
 	/*
 	m_vertexDecl->AddAttr("vTex0", NULL, TYPE_VEC2, offset);
 	offset += sizeof(vec2);
-
+	*/
 	m_vertexDecl->AddAttr("vTangent", NULL, TYPE_VEC3, offset);
 	offset += sizeof(vec3);
-
+	/*
 	m_vertexDecl->AddAttr("vBitangent", NULL, TYPE_VEC3, offset);
 	offset += sizeof(vec3);
-	m_vertexDecl->AddAttr("vNormal", NULL, TYPE_VEC3, offset);
 	*/
+	m_vertexDecl->AddAttr("vNormal", NULL, TYPE_VEC3, offset);
+	
 	m_Material = g_pEngine->CreateMaterial();
 	m_Material->SetShader(g_pRenderer->GetShader("Water"));
 	m_Material->SetTexture(DIFFUSE_MAP, g_pRenderer->GetSysTexture(EST_WHITE));
@@ -70,38 +231,35 @@ void CProjectedGrid::Init()
 	IShader * materialShader = m_Material->GetShader();
 	m_mvpUniform.AttachToShader("mMVP", materialShader);
 	m_lightPos.AttachToShader("vLightPos", materialShader);
+	m_shift.AttachToShader("waveParams", materialShader);
 	m_eyePos.AttachToShader("eyePos", materialShader);
 	m_uniformModelViewMatrix.AttachToShader("modelView", materialShader);
 
 	m_mvpUniform.Connect(m_Material);
 	m_lightPos.Connect(m_Material);
+	m_shift.Connect(m_Material);
 	m_eyePos.Connect(m_Material);
 	m_uniformModelViewMatrix.Connect(m_Material);
 
-	if (m_vertexBuffer = g_pRenderer->CreateVB())
+	if (m_VAO = g_pRenderer->CreateVB())
 	{
+		m_VAO->AllocMulti(3);
+
+		IVertexBuffer * positions = m_VAO->GetSubBuffer(0);
+		positions->Alloc(m_gridVertexCount * sizeof(vec3), 0);
+
+		IVertexBuffer * normals = m_VAO->GetSubBuffer(1);
+		normals->Alloc(m_gridVertexCount * sizeof(vec3), 0);
+
+		IVertexBuffer * tangents = m_VAO->GetSubBuffer(2);
+		tangents->Alloc(m_gridVertexCount * sizeof(vec3), 0);
+
+		/*
 		uint sizeInBytes = (sizeof(GridVertex)* m_gridVertexCount);
 		if (m_vertexBuffer->Alloc(sizeInBytes, 0))
 		{
-			/*
-			GridVertex * pVertices = (GridVertex *)(m_vertexBuffer->Lock(0, sizeInBytes));
-			if (NULL != pVertices)
-			{
-				for (uint z = 0; z < m_gridHeight; ++z)
-				{
-					for (uint x = 0; x < m_gridWidth; ++x)
-					{
-						uint offset = (z * m_gridHeight) + x;
-						GridVertex * vertex = (pVertices + offset);
-
-						vertex->vPos.Set(0.5f * x, 0, 0.5f * z);
-//						vertex->vTex.Set(((float)x / (m_gridWidth - 1)), ((float)z / (m_gridHeight - 1)));
-					}
-				}
-			}
-			m_vertexBuffer->Unlock();
-			*/
 		}
+		*/
 	}
 
 
@@ -167,7 +325,7 @@ void CProjectedGrid::Init()
 	m_frameBuffer = g_pRenderer->CreateRenderTarget();
 	m_frameMaterial = g_pEngine->CreateMaterial();
 
-	m_frameBuffer->Init(m_gridWidth, m_gridHeight, 2, false);
+	m_frameBuffer->Init(m_gridWidth, m_gridHeight, 3, false);
 
 	IShader * waterQuadShader = g_pRenderer->GetShader("WaterQuad");
 	m_frameMaterial->SetShader(waterQuadShader);
@@ -178,10 +336,16 @@ void CProjectedGrid::Init()
 	g_pEngine->LoadTexture(pHeightTex, "texture.tga");
 	m_frameMaterial->SetTexture(DIFFUSE_MAP, pHeightTex);
 
-	m_waveParams.AttachToShader("waveParams", waterQuadShader);
 	m_uniformIVP.AttachToShader("invViewProj", waterQuadShader);
-	m_waveParams.Connect(m_frameMaterial);
 	m_uniformIVP.Connect(m_frameMaterial);
+
+	m_waveSetup.AttachToShader("setup", waterQuadShader);
+	m_waveParams.AttachToShader("waveParams", waterQuadShader);
+	m_waveDirs.AttachToShader("waveDirs", waterQuadShader);
+
+	m_waveSetup.Connect(m_frameMaterial);
+	m_waveDirs.Connect(m_frameMaterial);
+	m_waveParams.Connect(m_frameMaterial);
 }
 
 
@@ -245,7 +409,9 @@ void CProjectedGrid::Update()
 	Project();
 
 	g_pEngine->DrawFullframeQuad(m_frameBuffer, m_frameMaterial);
-	m_frameBuffer->CopyToVertexBuffer(m_vertexBuffer, 0);
+	m_frameBuffer->CopyToVertexBuffer(m_VAO->GetSubBuffer(0), 0);
+	m_frameBuffer->CopyToVertexBuffer(m_VAO->GetSubBuffer(1), 1);
+	m_frameBuffer->CopyToVertexBuffer(m_VAO->GetSubBuffer(2), 2);
 	/*
 	//mat4 v = m_pProjector->GetViewProjMatrix();
 	//v.Inverse();
@@ -305,7 +471,7 @@ void CProjectedGrid::Update()
 	m_lookPoint.Set(5, 0, 0);
 	m_pCamera->LookAt(m_lookPoint, vec3::vUp);
 
-	m_pProjector2->SetPos(m_pCamera->GetPos() + vec3(-20, 20, 0));
+	m_pProjector2->SetPos(m_pCamera->GetPos() + vec3(-30, 20, 0));
 	m_pProjector2->LookAt(m_lookPoint, vec3::vUp);
 }
 
@@ -439,18 +605,68 @@ void CProjectedGrid::Render()
 	//const vec3 & dirLightPos = m_pProjector2->GetPos();
 	//vec4 light(dirLightPos.x, dirLightPos.y, dirLightPos.z, 1);
 
+	vec4 shift(0.2 * wave, 0, 0, 0);
+	m_shift.SetValue(&shift, 1);
+
 	m_lightPos.SetValue(&light, 1);
 	g_pEngine->PushBBox(bbox(vec3(light.x, light.y, light.z), 0.1f), 0xFFFFFFF);
 
-	vec4 waveParams(wave * 0.09f, 0, 0, 0);
-	m_waveParams.SetValue(&waveParams, 1);
+
+	// =================================================================================================
+
+	struct WaveDesc
+	{
+		WaveDesc(vec2 waveDir, float waveLen, float waveAmp, float waveQ, float waveTime)
+			: dir(waveDir)
+			, len(waveLen)
+			, amp(waveAmp)
+			, Q(waveQ)
+			, time(waveTime)
+		{
+		}
+
+		vec2 dir;
+		float len;
+		float amp;
+		float Q;
+		float time;
+	};
+
+	WaveDesc waves[] = 
+	{
+		WaveDesc(vec2(1.0f, 0.0f), 25.0f, 0.15f, 0.0f, wave * 0.09f),
+		WaveDesc(vec2(1.0f, 0.5f), 15.0f, 0.2f, 0.9f, wave * 3),
+		//WaveDesc(vec2(0.7071f, 0.7071f), 2.0f, 0.1f, 0.1f, 20 * wave),
+//		WaveDesc(vec2(0.0f, 1.0f), 10.0f, 0.0f, 0.3f, wave * 0.09f),
+	};
+
+	uint waveCount = (sizeof(waves) / sizeof(WaveDesc));
+	float time = (wave * 1.09f);
+
+	vec4 waveDirs[4];
+	vec4 waveParams[4];
+	vec4 setup(waveCount, 0, 0, 0);
+
+	for (uint i = 0; i < waveCount; ++i)
+	{
+		WaveDesc & w = waves[i];
+		waveDirs[i].Set(w.dir.x, w.dir.y, 0, 0);
+		waveParams[i].Set(w.len, w.amp, w.Q, w.time);
+	}
+
+
+	m_waveSetup.SetValue(&setup, 1);
+	m_waveDirs.SetValue(waveDirs, waveCount);
+	m_waveParams.SetValue(waveParams, waveCount);
+
 	m_uniformIVP.SetValue(m_invViewProj.pRows, 4);
 
+	// =================================================================================================
 
 	const vec3 & camPos = g_pGame->m_pCamera->GetPos();
 	vec4 eye(camPos.x, camPos.y, camPos.z, 1);
 	m_eyePos.SetValue(&eye, 1);
 
-	//m_vertexBuffer->RenderIndexed(m_vertexDecl, m_indexBuffer, PRIM_TRIANGLE);
-	m_vertexBuffer->Render(m_vertexDecl, 0, m_gridVertexCount, PRIM_POINT);
+	m_VAO->RenderIndexed(m_vertexDecl, m_indexBuffer, PRIM_TRIANGLE);
+	//m_VAO->Render(m_vertexDecl, 0, m_gridVertexCount, PRIM_POINT);
 }
