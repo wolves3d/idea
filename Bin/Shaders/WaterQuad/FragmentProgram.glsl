@@ -135,7 +135,7 @@ void main(void)
 	float time = fragWaveParams[0].w * 25;	
 	
 	
-	int waveCount = (int)fragWaveSetup.x;	
+	int waveCount = int(fragWaveSetup.x);
 	WaveVertex t = GerstnerFunc(waterPos.xz, waveCount);
 
 //	float r = 0.05;
