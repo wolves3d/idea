@@ -43,6 +43,8 @@ struct KnapsackSolver
 {
 	KnapsackSolver(int packCapacity, int itemCount)
 	{
+		++itemCount;
+
 		N = itemCount;
 		W = packCapacity;
 
@@ -50,8 +52,16 @@ struct KnapsackSolver
 		A = new int[N * W];
 	}
 
+	~KnapsackSolver()
+	{
+		DEL_ARRAY(pItems);
+		DEL_ARRAY(A);
+	}
+
 	void SetItem(uint id, int weight, int price)
 	{
+		id++;
+
  		pItems[id].weight = weight;
  		pItems[id].price = price;
 	}
@@ -83,22 +93,9 @@ struct KnapsackSolver
 		for (int k = 1; k < N; ++k)
 		{
 			for (int s = 1; s < W; ++s)
-//			for (int s = 0; s < W; ++s)
 			{
 				int weight = pItems[k].weight;
 				int price = pItems[k].price;
-				/*
-				if (s < (weight - 1))
-				{
-					SetA(k, s, GetA(k - 1, s));
-				}
-				else
-				{
-					SetA(k, s, max(
-						GetA(k - 1, s),
-						GetA(k - 1, s - weight) + weight));
-				}
-				*/
 				
 				if (s >= weight)
 				{
@@ -134,7 +131,7 @@ struct KnapsackSolver
 		else
 		{
 			FindAns(k - 1, s - pItems[k].weight);
-			result.push_back(k);
+			result.push_back(k-1);
 		}
 	}
 
@@ -175,13 +172,13 @@ void BalanceTest()
 // 	pack.SetItem(4, 2, 2);
 // 	pack.SetItem(5, 1, 1);
 
-	KnapsackSolver pack(25 + 1, 6);
-	pack.SetItem(0, 9, 9);
-	pack.SetItem(1, 9, 9);
+	KnapsackSolver pack(19 + 1, 5);
+	//pack.SetItem(0, 0, 0);
+	pack.SetItem(0, 7, 7);
+	pack.SetItem(1, 8, 8);
 	pack.SetItem(2, 9, 9);
-	pack.SetItem(3, 8, 8);
-	pack.SetItem(4, 8, 8);
-	pack.SetItem(5, 7, 7);
+	pack.SetItem(3, 7, 7);
+	pack.SetItem(4, 7, 7);
 
 	pack.Solve();
 
