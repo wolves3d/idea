@@ -1,5 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
+/*
+https://www.opengl.org/wiki/Framebuffer_Object_Examples#glReadPixels
+http://www.lighthouse3d.com/tutorials/opengl_framebuffer_objects/
+*/
+
 #include "Common.h"
 #include "../Texture/Texture.h"
 
