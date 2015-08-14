@@ -420,6 +420,9 @@ void CVertexBuffer::BindVertexDecl( IVertexDecl * pDecl )
 				glBindBufferARB(GL_ARRAY_BUFFER_ARB, bufferID);
 				GL_VALIDATE;
 
+				glEnableVertexAttribArrayARB(n /* tAttr.nLoc */);
+				GL_VALIDATE;
+
 				glVertexAttribPointerARB(
 					n, //tAttr.nLoc,
 					g_pElemCountGL[pAttr->eType],								// element count
@@ -427,9 +430,6 @@ void CVertexBuffer::BindVertexDecl( IVertexDecl * pDecl )
 					GL_FALSE, //( tAttr.eType == GL_FLOAT ) ? GL_FALSE : GL_TRUE,	// need normalize int numbers?
 					stride,								// stride
 					pOffset + offset);					// offset
-				GL_VALIDATE;
-
-				glEnableVertexAttribArrayARB(n /* tAttr.nLoc */);
 				GL_VALIDATE;
 			}
 		}

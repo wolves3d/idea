@@ -1,15 +1,19 @@
-#version 150
+#version 330
 uniform		mat4	mMVP;
 uniform		mat4	modelView;
 uniform		vec4	vLightPos;
 uniform		vec4	eyePos;
 uniform		vec4	waveParams;
-
+/*
 attribute	vec3 	vPos;
 attribute	vec3 	vNormal;
 //attribute	vec2 	vTex0;
 attribute	vec3 	vTangent;
 //attribute	vec3 	vBitangent;
+*/
+layout(location = 0) in vec3 vPos;
+layout(location = 1) in vec3 vNormal;
+layout(location = 2) in vec3 vTangent;
 
 varying		vec2	texCoord;
 //varying		vec4	colorMod;

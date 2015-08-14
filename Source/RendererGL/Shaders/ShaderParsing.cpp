@@ -49,6 +49,8 @@ bool CRenderer_GL::CreateShader( const char * szPath, IVertexDecl * pDecl,
 	pShader->m_nUniformCount		= nUnfmCount;
 	pShader->m_pVertexDecl		= pDecl;
 
+	pShader->Assign(); // Needed by ATI/AMD cards for uniform location
+
 	for ( uint n = 0; n < nUnfmCount; ++n )
 	{
 		pUnfms[ n ].nLoc = pShader->GetUniformLoc( pUnfms[ n ].sName );
